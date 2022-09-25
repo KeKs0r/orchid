@@ -33,11 +33,14 @@
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/orchid"],
+      "executor": "nx:run-commands",
       "options": {
-        "jestConfig": "packages/orchid/jest.config.ts",
-        "passWithNoTests": true
+        "commands": [
+          {
+            "command": "vitest",
+            "forwardAllArgs": true
+          }
+        ]
       }
     }
   },
