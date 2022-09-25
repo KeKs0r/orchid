@@ -22,9 +22,9 @@ import { Next, PluginDefinition } from '../plugin.types';
 //   return plugin;
 // }
 
-export const mainTask: TaskSpec<never> = {
+export const mainTask = {
   name: 'main',
-  async run(input, { run, log }: TaskContext) {
+  async run(input: unknown, { run, log }: TaskContext) {
     const list = await run('list', 4);
     log.info('Successful List', list);
     return list;
