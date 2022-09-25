@@ -1,23 +1,12 @@
-import { TaskSpec, TaskContext } from '../task.types';
+import { TaskSpec, TaskContext, SpecToTask } from '../task.types';
 
 declare global {
   interface GlobalTasks {
-    double: {
-      input: number;
-      output: Promise<number>;
-    };
-    list: {
-      input: undefined;
-      output: Promise<number>;
-    };
-    addOne: {
-      input: number;
-      output: number;
-    };
-    sum: {
-      input: number[];
-      output: number;
-    };
+    main: SpecToTask<typeof mainTask>;
+    double: SpecToTask<typeof doubleTask>;
+    list: SpecToTask<typeof listTask>;
+    addOne: SpecToTask<typeof addOneTask>;
+    sum: SpecToTask<typeof sumTask>;
   }
 }
 
@@ -29,6 +18,9 @@ export const mainTask: TaskSpec<undefined, Promise<number>> = {
     return list;
   },
 };
+
+export type DoubleTask = SpecToTask<typeof doubleTask>;
+export type ListTask = SpecToTask<typeof listTask>;
 
 export const doubleTask: TaskSpec<number, Promise<number>, number[]> = {
   name: 'double',
@@ -46,7 +38,7 @@ export const doubleTask: TaskSpec<number, Promise<number>, number[]> = {
   },
 };
 
-export const listTask: TaskSpec = {
+export const listTask: TaskSpec<number, Promise<number>> = {
   name: 'list',
   async run(amount: number, ctx: TaskContext) {
     // console.log('Task.run List', amount, 'parent', ctx.parent.name);
@@ -64,14 +56,14 @@ export const listTask: TaskSpec = {
   },
 };
 
-export const addOneTask: TaskSpec = {
+export const addOneTask: TaskSpec<number, number> = {
   name: 'addOne',
   run(amount: number) {
     return amount + 1;
   },
 };
 
-export const sumTask: TaskSpec = {
+export const sumTask: TaskSpec<number[], Promise<number>> = {
   name: 'sum',
   async run(list: number[]) {
     return list.reduce((a, b) => a + b, 0);
