@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "test": "nx run-many --target=test",
-    "test:ci": "yarn nx affected --target=test",
+    "test": "nx run-many --target=test --run",
+    "test:ci": "yarn nx affected --target=test --run",
     "lint:ci": "yarn nx affected --target=lint",
     "build:ci": "yarn nx affected --target=build"
   },
