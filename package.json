@@ -2,7 +2,12 @@
   "name": "orchid",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "test": "nx run-many --target=test",
+    "test:ci": "yarn nx affected --target=test",
+    "lint:ci": "yarn nx affected --target=lint",
+    "build:ci": "yarn nx affected --target=build"
+  },
   "private": true,
   "dependencies": {
     "@swc/helpers": "~0.3.3",
