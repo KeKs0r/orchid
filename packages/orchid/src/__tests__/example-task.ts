@@ -1,39 +1,30 @@
-import { TaskSpec, TaskContext } from '../task.types';
-import { Next, PluginDefinition } from '../plugin.types';
+import { TaskSpec, TaskContext, SpecToTask } from '../task.types';
 
-// function makePlugin({ threshold }: { threshold: number }): PluginDefinition {
-//   const plugin: PluginDefinition = {
-//     name: 'array-log',
-//     middleware: async (
-//       input: unknown,
-//       context: TaskContext,
-//       next: Next<TaskContext>
-//     ) => {
-//       if (Array.isArray(input) && input.length > threshold) {
-//         context.log.debug('Array Input', input.length);
-//       }
-//       const result = await next(input, context);
-//       if (Array.isArray(result) && result.length > threshold) {
-//         context.log.debug('Array Result', result.length);
-//       }
-//       return result;
-//     },
-//   };
-//   return plugin;
-// }
+declare global {
+  interface GlobalTasks {
+    main: SpecToTask<typeof mainTask>;
+    double: SpecToTask<typeof doubleTask>;
+    list: SpecToTask<typeof listTask>;
+    addOne: SpecToTask<typeof addOneTask>;
+    sum: SpecToTask<typeof sumTask>;
+  }
+}
 
-export const mainTask = {
+export const mainTask: TaskSpec<undefined, Promise<number>> = {
   name: 'main',
-  async run(input: unknown, { run, log }: TaskContext) {
+  async run(input: undefined, { run, log }: TaskContext) {
     const list = await run('list', 4);
     log.info('Successful List', list);
     return list;
   },
 };
 
-export const doubleTask: TaskSpec<any, any, number[]> = {
+export type DoubleTask = SpecToTask<typeof doubleTask>;
+export type ListTask = SpecToTask<typeof listTask>;
+
+export const doubleTask: TaskSpec<number, Promise<number>, number[]> = {
   name: 'double',
-  async run(input: number, ctx: TaskContext<number[]>) {
+  async run(input, ctx: TaskContext<number[]>) {
     // console.log('Task.run:double', input, 'parent', ctx.parent.name);
     if (ctx.parent.name !== 'list') {
       throw new Error('Double can only be called from list');
@@ -47,7 +38,7 @@ export const doubleTask: TaskSpec<any, any, number[]> = {
   },
 };
 
-export const listTask: TaskSpec = {
+export const listTask: TaskSpec<number, Promise<number>> = {
   name: 'list',
   async run(amount: number, ctx: TaskContext) {
     // console.log('Task.run List', amount, 'parent', ctx.parent.name);
@@ -65,16 +56,16 @@ export const listTask: TaskSpec = {
   },
 };
 
-export const addOneTask: TaskSpec = {
+export const addOneTask: TaskSpec<number, number> = {
   name: 'addOne',
-  run(amount: number, ctx: TaskContext) {
+  run(amount: number) {
     return amount + 1;
   },
 };
 
-export const sumTask: TaskSpec = {
+export const sumTask: TaskSpec<number[], Promise<number>> = {
   name: 'sum',
-  async run(list: number[], ctx: TaskContext) {
+  async run(list: number[]) {
     return list.reduce((a, b) => a + b, 0);
   },
 };
