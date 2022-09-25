@@ -3,7 +3,7 @@ export type TaskSpec<Input = any, Output = any, ParentInputType = null> = {
   run(input: Input, context: TaskContext<ParentInputType>): Output;
 };
 
-interface Logger {
+export interface Logger {
   debug(...args: unknown[]): void;
   info(...args: unknown[]): void;
   warn(...args: unknown[]): void;

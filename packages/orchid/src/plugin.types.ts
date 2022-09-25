@@ -1,19 +1,19 @@
 import { TaskContext, TaskSpec } from './task.types';
 
-type Next<Context> = (input: any, ctx: Context) => any;
+export type Next<Context extends TaskContext = TaskContext> = (
+  input: unknown,
+  ctx: Context
+) => Promise<unknown>;
 
-export type PluginDefinition<
-  PluginOptions = any,
-  Context extends TaskContext = TaskContext
-> = {
+export type PluginDefinition<Context extends TaskContext = TaskContext> = {
   name: string;
-  middleware: PluginMiddleWare<PluginOptions, Context>;
+  middleware: PluginMiddleWare<Context>;
 };
 
-export type PluginMiddleWare<
-  PluginOptions = any,
-  Context extends TaskContext = TaskContext
-> = (
-  options: PluginOptions,
+export type PluginMiddleWare<Context extends TaskContext = TaskContext> = (
   task: TaskSpec
-) => (input: any, context: Context, next: Next<Context>) => any;
+) => (
+  input: unknown,
+  context: Context,
+  next: Next<Context>
+) => Promise<unknown>;

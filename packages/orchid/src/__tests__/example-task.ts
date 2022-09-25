@@ -1,33 +1,42 @@
 import { TaskSpec, TaskContext } from '../task.types';
-import { PluginDefinition } from '../plugin.types';
+import { Next, PluginDefinition } from '../plugin.types';
 
-export const plugin: PluginDefinition<{ threshold: number }> = {
-  name: 'array-log',
-  middleware: (options) => async (input, context, next) => {
-    if (Array.isArray(input) && input.length > options.threshold) {
-      context.log.debug('Array Input', input.length);
-    }
-    const result = await next(input, context);
-    if (Array.isArray(result && result.length > options.threshold)) {
-      context.log.debug('Array Result', result.length);
-    }
-    return result;
-  },
-};
+// function makePlugin({ threshold }: { threshold: number }): PluginDefinition {
+//   const plugin: PluginDefinition = {
+//     name: 'array-log',
+//     middleware: async (
+//       input: unknown,
+//       context: TaskContext,
+//       next: Next<TaskContext>
+//     ) => {
+//       if (Array.isArray(input) && input.length > threshold) {
+//         context.log.debug('Array Input', input.length);
+//       }
+//       const result = await next(input, context);
+//       if (Array.isArray(result) && result.length > threshold) {
+//         context.log.debug('Array Result', result.length);
+//       }
+//       return result;
+//     },
+//   };
+//   return plugin;
+// }
 
 export const mainTask: TaskSpec<never> = {
   name: 'main',
   async run(input, { run, log }: TaskContext) {
     const list = await run('list', 4);
     log.info('Successful List', list);
+    return list;
   },
 };
 
 export const doubleTask: TaskSpec<any, any, number[]> = {
   name: 'double',
   async run(input: number, ctx: TaskContext<number[]>) {
+    // console.log('Task.run:double', input, 'parent', ctx.parent.name);
     if (ctx.parent.name !== 'list') {
-      throw new Error('Double can only be called fom list');
+      throw new Error('Double can only be called from list');
     }
     const listLength = ctx.parent.input.length;
     if (listLength > 6) {
@@ -41,6 +50,7 @@ export const doubleTask: TaskSpec<any, any, number[]> = {
 export const listTask: TaskSpec = {
   name: 'list',
   async run(amount: number, ctx: TaskContext) {
+    // console.log('Task.run List', amount, 'parent', ctx.parent.name);
     const list = new Array(amount).fill('').map((a, i) => i);
     const doubled = await Promise.all(
       list.map((number) => {
