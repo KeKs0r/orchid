@@ -21,7 +21,6 @@ describe('App', () => {
 
   describe('Tasks', () => {
     it('Can run single task', async () => {
-      expect(true).toEqual(false);
       const miniApp = makeApp([addOneTask]);
       const res = await miniApp.run('addOne', 3);
       expect(res).toEqual(4);
