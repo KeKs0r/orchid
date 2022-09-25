@@ -1,5 +1,4 @@
 import { TaskSpec, TaskContext } from '../task.types';
-import { Next, PluginDefinition } from '../plugin.types';
 
 declare global {
   interface GlobalTasks {
@@ -7,31 +6,22 @@ declare global {
       input: number;
       output: Promise<number>;
     };
+    list: {
+      input: undefined;
+      output: Promise<number>;
+    };
+    addOne: {
+      input: number;
+      output: number;
+    };
+    sum: {
+      input: number[];
+      output: number;
+    };
   }
 }
 
-// function makePlugin({ threshold }: { threshold: number }): PluginDefinition {
-//   const plugin: PluginDefinition = {
-//     name: 'array-log',
-//     middleware: async (
-//       input: unknown,
-//       context: TaskContext,
-//       next: Next<TaskContext>
-//     ) => {
-//       if (Array.isArray(input) && input.length > threshold) {
-//         context.log.debug('Array Input', input.length);
-//       }
-//       const result = await next(input, context);
-//       if (Array.isArray(result) && result.length > threshold) {
-//         context.log.debug('Array Result', result.length);
-//       }
-//       return result;
-//     },
-//   };
-//   return plugin;
-// }
-
-export const mainTask: TaskSpec<undefined, number> = {
+export const mainTask: TaskSpec<undefined, Promise<number>> = {
   name: 'main',
   async run(input: undefined, { run, log }: TaskContext) {
     const list = await run('list', 4);
@@ -40,9 +30,9 @@ export const mainTask: TaskSpec<undefined, number> = {
   },
 };
 
-export const doubleTask: TaskSpec<any, any, number[]> = {
+export const doubleTask: TaskSpec<number, Promise<number>, number[]> = {
   name: 'double',
-  async run(input: number, ctx: TaskContext<number[]>) {
+  async run(input, ctx: TaskContext<number[]>) {
     // console.log('Task.run:double', input, 'parent', ctx.parent.name);
     if (ctx.parent.name !== 'list') {
       throw new Error('Double can only be called from list');
@@ -76,14 +66,14 @@ export const listTask: TaskSpec = {
 
 export const addOneTask: TaskSpec = {
   name: 'addOne',
-  run(amount: number, ctx: TaskContext) {
+  run(amount: number) {
     return amount + 1;
   },
 };
 
 export const sumTask: TaskSpec = {
   name: 'sum',
-  async run(list: number[], ctx: TaskContext) {
+  async run(list: number[]) {
     return list.reduce((a, b) => a + b, 0);
   },
 };

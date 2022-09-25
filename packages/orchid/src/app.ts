@@ -1,7 +1,7 @@
 import { assert } from '@orchid/util';
 import { Logger, TaskContext, TaskSpec } from './task.types';
 
-export function makeApp(tasks: TaskSpec<any, any, any>[]) {
+export function makeApp(tasks: TaskSpec<unknown, unknown, unknown>[]) {
   const tasksByName = Object.fromEntries(
     tasks.map((task) => [task.name, task])
   );
@@ -14,9 +14,9 @@ export function makeApp(tasks: TaskSpec<any, any, any>[]) {
 
   async function run(
     name: string,
-    input: any,
+    input: unknown,
     context: Omit<TaskContext, 'run'>
-  ): Promise<any> {
+  ): Promise<unknown> {
     // console.log('App.run', name, 'input', input);
     const task = tasksByName[name];
     assert(task, `Could not find task definition for task '${name}'`);
@@ -30,11 +30,11 @@ export function makeApp(tasks: TaskSpec<any, any, any>[]) {
     };
     return task.run(input, {
       ...context,
-      run: (name: string, input: any) => run(name, input, nextContext),
-    });
+      run: (name: string, input: unknown) => run(name, input, nextContext),
+    } as TaskContext);
   }
   return {
-    run: (name: string, input?: any) =>
+    run: (name: string, input?: unknown) =>
       run(name, input, {
         log,
         parent: { name: 'root', input: null },

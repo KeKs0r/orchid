@@ -1,18 +1,13 @@
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface GlobalTasks {
-    main: {
-      input: undefined;
-      output: Promise<number>;
-    };
-    list: {
-      input: number;
-      output: Promise<number>;
-    };
-  }
+  interface GlobalTasks {}
 }
 
-export type TaskSpec<Input = any, Output = any, ParentInputType = null> = {
+export type TaskSpec<
+  Input = unknown,
+  Output = unknown,
+  ParentInputType = null
+> = {
   name: string;
   run(input: Input, context: TaskContext<ParentInputType>): Output;
 };
@@ -29,19 +24,21 @@ type GetTask<Name extends keyof GlobalTasks> = {
   input: GlobalTasks[Name]['input'];
   output: GlobalTasks[Name]['output'];
 };
-type Runner = {
-  [Name in keyof GlobalTasks]: (
-    name: Name,
-    input: GetTask<Name>['input']
-  ) => GetTask<Name>['output'];
+type AllRunner = {
+  [Name in keyof GlobalTasks]: GetTask<Name>;
 }[keyof GlobalTasks];
 
-export type TaskContext<ParentInputType = any> = {
+type Runner<Name extends AllRunner['name']> = (
+  name: Name,
+  input: GetTask<Name>['input']
+) => GetTask<Name>['output'];
+
+export type TaskContext<ParentInputType = unknown> = {
   log: Logger;
   /**
    * The definition in the TaskSpec is sync, but
    */
-  run: Runner;
+  run: Runner<AllRunner['name']>;
   parent: Parent<ParentInputType>;
 };
 
