@@ -3,7 +3,11 @@ declare global {
   interface GlobalTasks {}
 }
 
-export type TaskSpec<Input, Output = unknown, ParentInputType = null> = {
+export type TaskSpec<
+  Input = unknown,
+  Output = unknown,
+  ParentInputType = null
+> = {
   name: string;
   run(input: Input, context: TaskContext<ParentInputType>): Output;
 };

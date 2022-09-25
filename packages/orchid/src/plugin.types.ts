@@ -11,7 +11,7 @@ export type PluginDefinition<Context extends TaskContext = TaskContext> = {
 };
 
 export type PluginMiddleWare<Context extends TaskContext = TaskContext> = (
-  task: TaskSpec
+  task: TaskSpec<unknown, unknown>
 ) => (
   input: unknown,
   context: Context,
