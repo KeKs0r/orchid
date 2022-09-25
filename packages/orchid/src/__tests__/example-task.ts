@@ -1,6 +1,15 @@
 import { TaskSpec, TaskContext } from '../task.types';
 import { Next, PluginDefinition } from '../plugin.types';
 
+declare global {
+  interface GlobalTasks {
+    double: {
+      input: number;
+      output: Promise<number>;
+    };
+  }
+}
+
 // function makePlugin({ threshold }: { threshold: number }): PluginDefinition {
 //   const plugin: PluginDefinition = {
 //     name: 'array-log',
@@ -22,9 +31,9 @@ import { Next, PluginDefinition } from '../plugin.types';
 //   return plugin;
 // }
 
-export const mainTask = {
+export const mainTask: TaskSpec<undefined, number> = {
   name: 'main',
-  async run(input: unknown, { run, log }: TaskContext) {
+  async run(input: undefined, { run, log }: TaskContext) {
     const list = await run('list', 4);
     log.info('Successful List', list);
     return list;
