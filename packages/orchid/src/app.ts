@@ -1,3 +1,4 @@
+import { Middleware, Next } from './middleware.types';
 import {
   Logger,
   TaskContext,
@@ -6,16 +7,42 @@ import {
   GetInput,
   GetOutput,
   wrapToObject,
+  TaskSpecObject,
 } from './task.types';
 
 export function makeApp() {
+  const middlewares: Middleware[] = [];
+
   const log = makeLogger();
 
-  const run = <Task extends TaskSpec<any, any>>(
+  function use(middleware: Middleware) {
+    middlewares.push(middleware);
+  }
+
+  const invoke = <Task extends TaskSpecObject<any, any>>(
+    task: Task,
+    input: GetInput<Task>,
+    context: GetContext<Task>,
+    middlewares: Middleware[]
+  ): Promise<GetOutput<Task>> => {
+    if (middlewares.length === 0) {
+      return task.run(input, context);
+    }
+    const mw = middlewares[0];
+
+    const next: Next<Task> = (
+      nextInput: GetInput<Task>,
+      nextContext: GetContext<Task>
+    ) => invoke<Task>(task, nextInput, nextContext, middlewares.slice(1));
+
+    return mw(task, input, context, next);
+  };
+
+  const run = async <Task extends TaskSpec<any, any>>(
     task: Task,
     input: GetInput<Task>,
     context: Omit<GetContext<Task>, 'run'>
-  ): GetOutput<Task> => {
+  ): Promise<GetOutput<Task>> => {
     const taskObject = wrapToObject(task);
     const parentInput = input;
     const nextContext: Omit<TaskContext, 'run'> = {
@@ -30,13 +57,19 @@ export function makeApp() {
       run: <SubTask extends TaskSpec<unknown, unknown>>(
         task: SubTask,
         input: GetInput<SubTask>
-      ): GetOutput<SubTask> => run(task, input, nextContext),
+      ): Promise<GetOutput<SubTask>> => run(task, input, nextContext),
     };
-    const result: GetOutput<Task> = taskObject.run(input, currentContext);
+    const result: GetOutput<Task> = await invoke(
+      taskObject,
+      input,
+      currentContext,
+      middlewares
+    );
     return result;
   };
 
   return {
+    use,
     run: <Task extends TaskSpec<any, any>>(
       task: Task,
       input: GetInput<Task>
