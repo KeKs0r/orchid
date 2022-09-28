@@ -1,44 +1,42 @@
-import { assert } from '@orchid/util';
 import { Logger, TaskContext, TaskSpec } from './task.types';
 
-export function makeApp(tasks: TaskSpec<unknown, unknown, unknown>[]) {
-  const tasksByName = Object.fromEntries(
-    tasks.map((task) => [task.name, task])
-  );
-  assert(
-    !tasksByName['root'],
-    `'root' is a reserved task name for the root context. The name 'main' is preffered for your entry point`
-  );
-
+export function makeApp() {
   const log = makeLogger();
 
-  async function run(
-    name: string,
-    input: unknown,
-    context: Omit<TaskContext, 'run'>
-  ): Promise<unknown> {
-    // console.log('App.run', name, 'input', input);
-    const task = tasksByName[name];
-    assert(task, `Could not find task definition for task '${name}'`);
+  const run = <Task extends TaskSpec<any, any>>(
+    task: Task,
+    input: Parameters<Task['run']>[0],
+    context: Omit<Parameters<Task['run']>[1], 'run'>
+  ): ReturnType<Task['run']> => {
     const parentInput = input;
-    const nextContext = {
+    const nextContext: Omit<TaskContext, 'run'> = {
       ...context,
       parent: {
-        name,
+        task,
         input: parentInput,
       },
     };
-    return task.run(input, {
+    const currentContext: Parameters<Task['run']>[1] = {
       ...context,
-      run: (name: string, input: unknown) => run(name, input, nextContext),
-    } as TaskContext);
-  }
+      run: <SubTask extends TaskSpec<unknown, unknown>>(
+        task: SubTask,
+        input: Parameters<SubTask['run']>[0]
+      ): ReturnType<SubTask['run']> => run(task, input, nextContext),
+    };
+    const result: ReturnType<Task['run']> = task.run(input, currentContext);
+    return result;
+  };
+
   return {
-    run: (name: string, input?: unknown) =>
-      run(name, input, {
+    run: <Task extends TaskSpec<any, any>>(
+      task: Task,
+      input: Parameters<Task['run']>[0]
+    ) => {
+      const initalContext: Omit<TaskContext, 'run'> = {
         log,
-        parent: { name: 'root', input: null },
-      }),
+      };
+      return run(task, input, initalContext);
+    },
   };
 }
 

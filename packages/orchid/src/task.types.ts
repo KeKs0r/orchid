@@ -1,24 +1,30 @@
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface
-  interface GlobalTasks {}
+export type TaskSpec<
+  Input,
+  Output,
+  Context extends TaskContext = TaskContext
+> = TaskSpecObject<Input, Output, Context>;
+//   | RunFn<Input, Output, Context>;
+
+export interface TaskSpecObject<
+  Input,
+  Output,
+  Context extends TaskContext = TaskContext
+> {
+  id: string;
+  run(input: Input, ctx: Context): Output;
 }
 
-export type TaskSpec<
-  Input = unknown,
-  Output = unknown,
-  ParentInputType = null
-> = {
-  name: string;
-  run(input: Input, context: TaskContext<ParentInputType>): Output;
+export type TaskContext = {
+  run<Task extends TaskSpec<unknown, unknown>>(
+    task: Task,
+    input: Parameters<Task['run']>[0]
+  ): ReturnType<Task['run']>;
+  parent?: {
+    task: TaskSpec<unknown, unknown>;
+    input: unknown;
+  };
+  log: Logger;
 };
-
-export type SpecToTask<Spec> = Spec extends TaskSpec<
-  infer Input,
-  infer Output,
-  unknown
->
-  ? { input: Input; output: Output }
-  : never;
 
 export interface Logger {
   debug(...args: unknown[]): void;
@@ -26,31 +32,3 @@ export interface Logger {
   warn(...args: unknown[]): void;
   error(...args: unknown[]): void;
 }
-
-type GetTask<Name extends keyof GlobalTasks> = {
-  name: Name;
-  input: GlobalTasks[Name]['input'];
-  output: GlobalTasks[Name]['output'];
-};
-type AllRunner = {
-  [Name in keyof GlobalTasks]: GetTask<Name>;
-}[keyof GlobalTasks];
-
-type Runner<Name extends AllRunner['name']> = (
-  name: Name,
-  input: GetTask<Name>['input']
-) => GetTask<Name>['output'];
-
-export type TaskContext<ParentInputType = unknown> = {
-  log: Logger;
-  /**
-   * The definition in the TaskSpec is sync, but
-   */
-  run: Runner<AllRunner['name']>;
-  parent: Parent<ParentInputType>;
-};
-
-type Parent<InputType> = {
-  name: string;
-  input: InputType;
-};
