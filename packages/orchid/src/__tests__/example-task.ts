@@ -1,4 +1,4 @@
-import { TaskSpec } from '../task.types';
+import { TaskContext, TaskSpec } from '../task.types';
 
 export const mainTask: TaskSpec<undefined, Promise<number>> = {
   id: 'main',
@@ -9,9 +9,9 @@ export const mainTask: TaskSpec<undefined, Promise<number>> = {
   },
 };
 
-export const listTask: TaskSpec<number, Promise<number>> = {
+export const listTask = {
   id: 'list',
-  async run(amount: number, { run }): Promise<number> {
+  async run(amount: number, { run }: TaskContext): Promise<number> {
     const list = Array.from({ length: amount }).map((a, i) => i);
     const doubled = await Promise.all(
       list.map((number) => {
