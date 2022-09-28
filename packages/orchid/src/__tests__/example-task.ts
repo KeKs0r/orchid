@@ -12,7 +12,7 @@ export const mainTask: TaskSpec<undefined, Promise<number>> = {
 export const listTask: TaskSpec<number, Promise<number>> = {
   id: 'list',
   async run(amount: number, { run }): Promise<number> {
-    const list = new Array(amount).fill('').map((a, i) => i);
+    const list = Array.from({ length: amount }).map((a, i) => i);
     const doubled = await Promise.all(
       list.map((number) => {
         if (number % 3 == 1) {
