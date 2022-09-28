@@ -1,5 +1,11 @@
 import { makeApp } from '../app';
-import { addOneTask, doubleTask, listTask, mainTask } from './example-task';
+import {
+  addOneTask,
+  doubleTask,
+  listTask,
+  mainTask,
+  sumTask,
+} from './example-task';
 
 describe('Tasks', () => {
   const app = makeApp();
@@ -21,5 +27,9 @@ describe('Tasks', () => {
      */
     const res = await app.run(mainTask, undefined);
     expect(res).toEqual(12);
+  });
+  it('Can directly run Task Functions', () => {
+    const sum = app.run(sumTask, [1, 2, 3, 4, 5]);
+    expect(sum).toEqual(15);
   });
 });

@@ -2,9 +2,12 @@ export type TaskSpec<
   Input,
   Output,
   Context extends TaskContext = TaskContext
-> = TaskSpecObject<Input, Output, Context>;
-//   | RunFn<Input, Output, Context>;
+> = TaskSpecObject<Input, Output, Context> | RunFn<Input, Output, Context>;
 
+type RunFn<Input, Output, Context = TaskContext> = (
+  input: Input,
+  ctx: Context
+) => Output;
 export interface TaskSpecObject<
   Input,
   Output,
@@ -14,13 +17,42 @@ export interface TaskSpecObject<
   run(input: Input, ctx: Context): Output;
 }
 
+export const wrapToObject = <Input, Output>(
+  task: TaskSpec<Input, Output>
+): TaskSpecObject<Input, Output> => {
+  if (typeof task === 'function') {
+    return {
+      id: task.name,
+      run: task,
+    };
+  }
+  return task;
+};
+
+export type GetRunner<Spec extends TaskSpec<any, any>> =
+  Spec extends TaskSpecObject<any, any>
+    ? Spec['run']
+    : Spec extends RunFn<any, any>
+    ? Spec
+    : never;
+
+export type GetInput<Spec extends TaskSpec<any, any>> = Parameters<
+  GetRunner<Spec>
+>[0];
+export type GetContext<Spec extends TaskSpec<any, any>> = Parameters<
+  GetRunner<Spec>
+>[1];
+export type GetOutput<Spec extends TaskSpec<any, any>> = ReturnType<
+  GetRunner<Spec>
+>;
+
 export type TaskContext = {
-  run<Task extends TaskSpec<unknown, unknown>>(
+  run<Task extends TaskSpec<any, any>>(
     task: Task,
-    input: Parameters<Task['run']>[0]
-  ): ReturnType<Task['run']>;
+    input: GetInput<Task>
+  ): GetOutput<Task>;
   parent?: {
-    task: TaskSpec<unknown, unknown>;
+    task: TaskSpecObject<unknown, unknown>;
     input: unknown;
   };
   log: Logger;

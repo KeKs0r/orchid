@@ -48,9 +48,6 @@ export const addOneTask: TaskSpec<number, number> = {
   },
 };
 
-export const sumTask: TaskSpec<number[], Promise<number>> = {
-  id: 'sum',
-  async run(list: number[]) {
-    return list.reduce((a, b) => a + b, 0);
-  },
-};
+export function sumTask(list: number[]) {
+  return list.reduce((a, b) => a + b, 0);
+}

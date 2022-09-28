@@ -1,36 +1,45 @@
-import { Logger, TaskContext, TaskSpec } from './task.types';
+import {
+  Logger,
+  TaskContext,
+  TaskSpec,
+  GetContext,
+  GetInput,
+  GetOutput,
+  wrapToObject,
+} from './task.types';
 
 export function makeApp() {
   const log = makeLogger();
 
   const run = <Task extends TaskSpec<any, any>>(
     task: Task,
-    input: Parameters<Task['run']>[0],
-    context: Omit<Parameters<Task['run']>[1], 'run'>
-  ): ReturnType<Task['run']> => {
+    input: GetInput<Task>,
+    context: Omit<GetContext<Task>, 'run'>
+  ): GetOutput<Task> => {
+    const taskObject = wrapToObject(task);
     const parentInput = input;
     const nextContext: Omit<TaskContext, 'run'> = {
       ...context,
       parent: {
-        task,
+        task: taskObject,
         input: parentInput,
       },
     };
-    const currentContext: Parameters<Task['run']>[1] = {
+    const currentContext: GetContext<Task> = {
       ...context,
       run: <SubTask extends TaskSpec<unknown, unknown>>(
         task: SubTask,
-        input: Parameters<SubTask['run']>[0]
-      ): ReturnType<SubTask['run']> => run(task, input, nextContext),
+        input: GetInput<SubTask>
+      ): GetOutput<SubTask> => run(task, input, nextContext),
     };
-    const result: ReturnType<Task['run']> = task.run(input, currentContext);
+    const result: GetOutput<Task> = taskObject.run(input, currentContext);
     return result;
   };
 
   return {
     run: <Task extends TaskSpec<any, any>>(
       task: Task,
-      input: Parameters<Task['run']>[0]
+      input: GetInput<Task>
     ) => {
       const initalContext: Omit<TaskContext, 'run'> = {
         log,
