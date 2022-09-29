@@ -1,44 +1,51 @@
-import { assert } from '@orchid/util';
-import { Logger, TaskContext, TaskSpec } from './task.types';
+import {
+  Logger,
+  TaskContext,
+  TaskSpec,
+  GetContext,
+  GetInput,
+  GetOutput,
+  wrapToObject,
+} from './task.types';
 
-export function makeApp(tasks: TaskSpec<unknown, unknown, unknown>[]) {
-  const tasksByName = Object.fromEntries(
-    tasks.map((task) => [task.name, task])
-  );
-  assert(
-    !tasksByName['root'],
-    `'root' is a reserved task name for the root context. The name 'main' is preffered for your entry point`
-  );
-
+export function makeApp() {
   const log = makeLogger();
 
-  async function run(
-    name: string,
-    input: unknown,
-    context: Omit<TaskContext, 'run'>
-  ): Promise<unknown> {
-    // console.log('App.run', name, 'input', input);
-    const task = tasksByName[name];
-    assert(task, `Could not find task definition for task '${name}'`);
+  const run = <Task extends TaskSpec<any, any>>(
+    task: Task,
+    input: GetInput<Task>,
+    context: Omit<GetContext<Task>, 'run'>
+  ): GetOutput<Task> => {
+    const taskObject = wrapToObject(task);
     const parentInput = input;
-    const nextContext = {
+    const nextContext: Omit<TaskContext, 'run'> = {
       ...context,
       parent: {
-        name,
+        task: taskObject,
         input: parentInput,
       },
     };
-    return task.run(input, {
+    const currentContext: GetContext<Task> = {
       ...context,
-      run: (name: string, input: unknown) => run(name, input, nextContext),
-    } as TaskContext);
-  }
+      run: <SubTask extends TaskSpec<unknown, unknown>>(
+        task: SubTask,
+        input: GetInput<SubTask>
+      ): GetOutput<SubTask> => run(task, input, nextContext),
+    };
+    const result: GetOutput<Task> = taskObject.run(input, currentContext);
+    return result;
+  };
+
   return {
-    run: (name: string, input?: unknown) =>
-      run(name, input, {
+    run: <Task extends TaskSpec<any, any>>(
+      task: Task,
+      input: GetInput<Task>
+    ) => {
+      const initalContext: Omit<TaskContext, 'run'> = {
         log,
-        parent: { name: 'root', input: null },
-      }),
+      };
+      return run(task, input, initalContext);
+    },
   };
 }
 
