@@ -29,7 +29,7 @@ export const listTask = {
 export const doubleTask: TaskSpec<number, Promise<number>> = {
   name: 'double',
   async run(input, { log, parent }) {
-    if (parent?.task.id !== 'list') {
+    if (parent?.task.name !== 'list') {
       throw new Error('Double can only be called from list');
     }
 
