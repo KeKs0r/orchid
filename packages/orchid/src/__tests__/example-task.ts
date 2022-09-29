@@ -1,7 +1,7 @@
 import { TaskContext, TaskSpec } from '../task.types';
 
 export const mainTask: TaskSpec<undefined, Promise<number>> = {
-  id: 'main',
+  name: 'main',
   async run(input: undefined, { run, log }) {
     const list = run(listTask, 4);
     log.info('Successful List', list);
@@ -10,7 +10,7 @@ export const mainTask: TaskSpec<undefined, Promise<number>> = {
 };
 
 export const listTask = {
-  id: 'list',
+  name: 'list',
   async run(amount: number, { run }: TaskContext): Promise<number> {
     const list = Array.from({ length: amount }).map((a, i) => i);
     const doubled = await Promise.all(
@@ -27,7 +27,7 @@ export const listTask = {
 };
 
 export const doubleTask: TaskSpec<number, Promise<number>> = {
-  id: 'double',
+  name: 'double',
   async run(input, { log, parent }) {
     if (parent?.task.id !== 'list') {
       throw new Error('Double can only be called from list');
@@ -42,7 +42,7 @@ export const doubleTask: TaskSpec<number, Promise<number>> = {
 };
 
 export const addOneTask: TaskSpec<number, number> = {
-  id: 'addOne',
+  name: 'addOne',
   run(amount: number) {
     return amount + 1;
   },

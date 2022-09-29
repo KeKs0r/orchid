@@ -13,7 +13,7 @@ export interface TaskSpecObject<
   Output,
   Context extends TaskContext = TaskContext
 > {
-  id: string;
+  name: string;
   run(input: Input, ctx: Context): Output;
 }
 
@@ -22,7 +22,7 @@ export const wrapToObject = <Input, Output>(
 ): TaskSpecObject<Input, Output> => {
   if (typeof task === 'function') {
     return {
-      id: task.name,
+      name: task.name,
       run: task,
     };
   }
