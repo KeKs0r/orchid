@@ -22,7 +22,7 @@ export const wrapToObject = <Input, Output>(
 ): TaskSpecObject<Input, Output> => {
   if (typeof task === 'function') {
     return {
-      name: task.name,
+      name: task.name || 'anon',
       run: task,
     };
   }
