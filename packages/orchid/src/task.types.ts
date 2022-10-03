@@ -7,14 +7,14 @@ export type TaskSpec<
 type RunFn<Input, Output, Context = TaskContext> = (
   input: Input,
   ctx: Context
-) => Output;
+) => Promise<Output> | Output;
 export interface TaskSpecObject<
   Input,
   Output,
   Context extends TaskContext = TaskContext
 > {
   name: string;
-  run(input: Input, ctx: Context): Output;
+  run(input: Input, ctx: Context): Promise<Output> | Output;
 }
 
 export const wrapToObject = <Input, Output>(
@@ -50,9 +50,9 @@ export type TaskContext = {
   run<Task extends TaskSpec<any, any>>(
     task: Task,
     input: GetInput<Task>
-  ): GetOutput<Task>;
+  ): Promise<GetOutput<Task>>;
   parent?: {
-    task: TaskSpecObject<unknown, unknown>;
+    task: TaskSpecObject<unknown, Promise<unknown>>;
     input: unknown;
   };
   log: Logger;
