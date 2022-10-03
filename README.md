@@ -1,65 +1,38 @@
-### API
+# Orchid
 
-### Task Definition
+Task orchestrator to help with complex flows in your code. From local development to production.
 
 ```typescript
 const mainTask: TaskSpec = {
   name: 'main',
   async run(input, { run, log }) {
-    const list = await run('list', 4);
-    log.info('Successful List', list);
+    const list = await run(getListTask, 4);
+    log.info('List has so many elements', list.length);
+    const sum = await run(sumTask, list);
+    return sum;
   },
 };
 ```
 
-### Task Execution
+## Why an tool for task orchestration?
 
-```typescript
-/**
- *  This api is not really fixed yet
- */
-const process = buildProcess([mainTask]);
-await process.run('main');
-```
+While building scripts for tasks like scraping, migration and background processing I found myself building the same tools over and over.
+Iterating locally when calling a lot of APIs slows down the feedback cycle.
+Finding the root cause of an error in a multi step process based on stack traces is not sufficient. Investigating the output of a long process without it intermediates steps is hard.
 
-### Plugins
+## Disclaimer
 
-- All functionality can be implemented via plugins (= the middleware pattern)
-- this includes core functionality as well as long tail
-  - caching
-  - error reporting & recovery (console-reporter)
+This is currently work in progress, and can't yet be used. If you want to follow the journey and progress:
+[@marchoeffl](https://twitter.com/marchoeffl) on Twitter.
 
-```typescript
-export const plugin: PluginDefinition<{ threshold: number }> = {
-  name: 'array-log',
-  middleware: (options) => async (input, context, next) => {
-    if (Array.isArray(input) && input.length > options.threshold) {
-      context.log.debug('Array Input', input.length);
-    }
-    const result = await next(input, context);
-    if (Array.isArray(result && result.length > options.threshold)) {
-      context.log.debug('Array Result', result.length);
-    }
-    return result;
-  },
-};
-```
+### Progress
 
-```typescript
-/**
- * Process with middleware
- */
-const process = buildProcess([mainTask], [middleware]);
-await process.run('main');
-```
-
-```typescript
-/**
- * Alternative API
- */
-const app = new App();
-app.register(mainTask);
-app.use(middleware);
-
-await process.run('main');
-```
+- [x] Core API for Task Execution
+- [x] Middleware API for extending pure task execution
+- Standard Plugins
+  - [] Cache Plugin
+  - [] Logger Plugin
+  - [] Error Reporting
+- Extended Plugin Ecosystem
+  - [ ] Runner for local iteration
+  - [ ] Webserver for investigating runs
