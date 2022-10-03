@@ -9,6 +9,9 @@
     "lint:ci": "yarn nx affected --target=lint",
     "build:ci": "yarn nx affected --target=build"
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "private": true,
   "dependencies": {
     "@swc/helpers": "~0.3.3",
