@@ -45,7 +45,7 @@ export function makeStorage(options: StorageOptions): CacheStorage {
 
   return {
     load(key: string) {
-      const { directory, file, field, path } = parseKey(key);
+      const { directory, field, path } = parseKey(key);
       ensurePath(directory);
 
       const data = read(path);
