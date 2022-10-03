@@ -3,6 +3,7 @@
   "version": 2,
   "projects": {
     "orchid": "packages/orchid",
+    "plugin-cache": "packages/plugin-cache",
     "util": "packages/util"
   }
 }
