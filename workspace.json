@@ -4,6 +4,7 @@
   "projects": {
     "orchid": "packages/orchid",
     "plugin-cache": "packages/plugin-cache",
+    "plugin-cache-file": "packages/plugin-cache-file",
     "util": "packages/util"
   }
 }

@@ -22,6 +22,9 @@ interface CacheTaskExtension<
     item: CacheResult<Output>,
     context: Context
   ) => boolean;
+  version?: number;
+  serialize?: <Serialized>(result: Output) => Serialized;
+  deserialize?: <Serialized>(raw: Serialized) => Output;
 }
 
 interface CachePluginOptions {
