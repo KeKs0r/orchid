@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { rmSync } from 'fs';
+import { mkdirSync, rmSync } from 'fs';
 
 import { makeApp, TaskContext, TaskSpec } from 'orchid';
 import { makeStorage } from '@orchid/plugin-cache-file';
@@ -66,8 +66,9 @@ describe('E2E tests', () => {
     })
   );
 
-  beforeAll(() => {
+  beforeEach(() => {
     rmSync(basePath, { recursive: true, force: true });
+    mkdirSync(basePath);
   });
 
   it('Can run full process without cached tasks', async () => {
@@ -114,7 +115,6 @@ describe('E2E tests', () => {
       cache: <TaskCacheExtension<number, List>>{
         ...invalidatedNewGetList.cache,
         onPostLoad(item, context, input) {
-          console.log('Item', item.result, 'Input', input);
           spy(item.result);
           if (item.result === input) {
             return new List(input * 2);

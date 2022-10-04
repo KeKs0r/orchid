@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { join, normalize } from 'path';
+import { dirname, join, normalize } from 'path';
 import sanitize from 'sanitize-filename';
 import type { CacheResult, CacheStorage } from '@orchid/plugin-cache';
 import { assert } from '@orchid/util';
@@ -10,6 +10,7 @@ interface StorageOptions {
 export function makeStorage(options: StorageOptions): CacheStorage {
   const { basePath } = options;
   const existingFolders = new Set();
+  ensurePath(basePath);
 
   function ensurePath(path: string) {
     if (existingFolders.has(path)) {
@@ -48,7 +49,7 @@ export function makeStorage(options: StorageOptions): CacheStorage {
       fullPath.startsWith(basePath),
       `${fullPath} does not seem to be in ${basePath}`
     );
-
+    ensurePath(dirname(fullPath));
     const serialized = JSON.stringify(data);
     fs.writeFileSync(fullPath, serialized);
   }
