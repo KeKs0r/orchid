@@ -22,9 +22,9 @@ interface CacheTaskExtension<
     item: CacheResult<Output>,
     context: Context
   ) => boolean;
-  version?: number;
-  serialize?: <Serialized>(result: Output) => Serialized;
-  deserialize?: <Serialized>(raw: Serialized) => Output;
+  meta: any;
+  onPostLoad?: <Serialized>(result: Serialized) => Output;
+  onPreSave?: <Serialized>(result: Output) => Serialized;
 }
 
 interface CachePluginOptions {
@@ -55,7 +55,8 @@ export function createCachePlugin(options: CachePluginOptions) {
     const item = {
       meta: {
         createdDate: new Date().toISOString(),
-        version: task.cache.version || 1,
+        version: 1,
+        ...task.cache.meta,
       },
       result: cacheResult,
     };
