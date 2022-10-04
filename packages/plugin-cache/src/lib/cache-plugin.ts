@@ -43,10 +43,23 @@ export function createCachePlugin(options: CachePluginOptions) {
       (!task.cache.stillValid ||
         task.cache.stillValid(input, cacheItem, context))
     ) {
-      return cacheItem.result;
+      return task.cache.deserialize
+        ? task.cache.deserialize(cacheItem.result)
+        : cacheItem.result;
     }
     const result = await next(input, context);
-    await options.storage.save(key, result);
+
+    const cacheResult = task.cache.serialize
+      ? task.cache.serialize(result)
+      : result;
+    const item = {
+      meta: {
+        createdDate: new Date().toISOString(),
+        version: task.cache.version || 1,
+      },
+      result: cacheResult,
+    };
+    await options.storage.save(key, item);
     return result;
   };
   return middleware;
