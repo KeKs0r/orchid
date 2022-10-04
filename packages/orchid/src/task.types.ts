@@ -62,11 +62,12 @@ export type TaskContext = {
     task: Task,
     input: GetInput<Task>
   ): Promise<GetOutput<Task>>;
+  extendContext(key: string, value: any): void;
+  log: Logger;
   parent?: {
     task: TaskSpecObject<unknown, Promise<unknown>>;
     input: unknown;
   };
-  log: Logger;
 } & TaskContextExtension;
 
 export interface Logger {

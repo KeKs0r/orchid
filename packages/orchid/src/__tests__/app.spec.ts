@@ -7,6 +7,13 @@ import {
   sumTask,
 } from './example-task';
 import { makeExampleMiddleware } from './example-middleware';
+import { TaskContext } from '../task.types';
+
+declare global {
+  interface TaskContextExtension {
+    foo: string;
+  }
+}
 
 describe('Tasks', () => {
   const app = makeApp();
@@ -32,6 +39,22 @@ describe('Tasks', () => {
   it('Can directly run Task Functions', async () => {
     const sum = await app.run(sumTask, [1, 2, 3, 4, 5]);
     expect(sum).toEqual(15);
+  });
+
+  it('Can extend the context', async () => {
+    async function outerTask(
+      input: undefined,
+      { run, extendContext, foo }: TaskContext
+    ) {
+      expect(foo).toBeFalsy();
+      await run(innerTask, undefined);
+      extendContext('foo', 'bar');
+      await run(innerTask, 'bar');
+    }
+    function innerTask(expected: string | undefined, context: TaskContext) {
+      expect(context.foo).toEqual(expected);
+    }
+    await app.run(outerTask, undefined);
   });
 });
 

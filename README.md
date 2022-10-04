@@ -28,9 +28,10 @@ This is currently work in progress, and can't yet be used. If you want to follow
 ### Progress
 
 - [x] Core API for Task Execution
+- [x] API for extending context
 - [x] Middleware API for extending pure task execution
 - Standard Plugins
-  - [] Cache Plugin
+  - [x] Cache Plugin
   - [] Logger Plugin
   - [] Error Reporting
 - Extended Plugin Ecosystem
