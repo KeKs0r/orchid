@@ -46,11 +46,15 @@ app.use(
   })
 );
 
-app.run(mainTask);
+app.run(mainTask, 5);
 
 const mainTask: TaskSpec<undefined, Promise<number>> = {
   name: 'main',
-  async run(input: undefined, { run, log }) {
+  async run(traceId: number, { run, log, extendContext }) {
+    // I can add something to the context, so all children have access to it
+    extendContext('traceId', traceId);
+
+    // I can run other tasks
     const list = run(listTask, 4);
     log.info('Successful List', list);
     return list;
@@ -59,7 +63,13 @@ const mainTask: TaskSpec<undefined, Promise<number>> = {
 
 const listTask = {
   name: 'list',
-  async run(amount: number, { run }: TaskContext): Promise<number> {
+  async run(
+    amount: number,
+    { run, log, traceId }: TaskContext
+  ): Promise<number> {
+    if (traceId > 3) {
+      log.debug('WOW the traceId is sooo big');
+    }
     const list = Array.from({ length: amount }).map((a, i) => i);
     const doubled = await Promise.all(
       list.map((number) => {
