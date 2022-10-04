@@ -1,7 +1,8 @@
 import fs from 'fs';
-import { join } from 'path';
+import { join, normalize } from 'path';
 import sanitize from 'sanitize-filename';
 import type { CacheResult, CacheStorage } from '@orchid/plugin-cache';
+import { assert } from '@orchid/util';
 
 interface StorageOptions {
   basePath: string;
@@ -22,7 +23,11 @@ export function makeStorage(options: StorageOptions): CacheStorage {
   }
 
   function read(path: string) {
-    const fullPath = join(basePath, path);
+    const fullPath = normalize(join(basePath, path));
+    assert(
+      fullPath.startsWith(basePath),
+      `${fullPath} does not seem to be in ${basePath}`
+    );
     try {
       const data = fs.readFileSync(fullPath, 'utf-8');
       if (data) {
@@ -38,7 +43,12 @@ export function makeStorage(options: StorageOptions): CacheStorage {
   }
 
   function write(path: string, data: Record<string, any>) {
-    const fullPath = join(basePath, path);
+    const fullPath = normalize(join(basePath, path));
+    assert(
+      fullPath.startsWith(basePath),
+      `${fullPath} does not seem to be in ${basePath}`
+    );
+
     const serialized = JSON.stringify(data);
     fs.writeFileSync(fullPath, serialized);
   }
