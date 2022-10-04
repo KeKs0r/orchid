@@ -45,19 +45,38 @@ export function makeApp() {
   ): Promise<GetOutput<Task>> => {
     const taskObject = wrapToObject(task);
     const parentInput = input;
-    const nextContext: Omit<TaskContext, 'run'> = {
+    const baseNextContext: Omit<TaskContext, 'run'> = {
       ...context,
       parent: {
         task: taskObject,
         input: parentInput,
       },
     };
+
+    const nextContextExtension: Record<string, any> = {};
+
+    function extendContext(key: string, value: any) {
+      if (nextContextExtension[key]) {
+        context.log.warn(
+          `Trying to extend context with key '${key}', but it already exists`
+        );
+      }
+      nextContextExtension[key] = value;
+    }
+
     const currentContext: GetContext<Task> = {
       ...context,
+      extendContext,
       run: <SubTask extends TaskSpec<unknown, unknown>>(
         task: SubTask,
         input: GetInput<SubTask>
-      ): Promise<GetOutput<SubTask>> => run(task, input, nextContext),
+      ): Promise<GetOutput<SubTask>> => {
+        const combinedContext: Omit<TaskContext, 'run'> = {
+          ...baseNextContext,
+          ...nextContextExtension,
+        };
+        return run(task, input, combinedContext);
+      },
     };
     const result: GetOutput<Task> = await invoke(
       taskObject,
