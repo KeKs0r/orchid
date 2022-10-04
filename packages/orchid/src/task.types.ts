@@ -4,6 +4,17 @@ export type TaskSpec<
   Context extends TaskContext = TaskContext
 > = TaskSpecObject<Input, Output, Context> | RunFn<Input, Output, Context>;
 
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface TaskContextExtension {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface TaskSpecExtension<
+    Input,
+    Output,
+    Context extends TaskContext = TaskContext
+  > {}
+}
+
 type RunFn<Input, Output, Context = TaskContext> = (
   input: Input,
   ctx: Context
@@ -12,7 +23,7 @@ export interface TaskSpecObject<
   Input,
   Output,
   Context extends TaskContext = TaskContext
-> {
+> extends TaskSpecExtension<Input, Output, Context> {
   name: string;
   run(input: Input, ctx: Context): Promise<Output> | Output;
 }
@@ -56,7 +67,7 @@ export type TaskContext = {
     input: unknown;
   };
   log: Logger;
-};
+} & TaskContextExtension;
 
 export interface Logger {
   debug(...args: unknown[]): void;

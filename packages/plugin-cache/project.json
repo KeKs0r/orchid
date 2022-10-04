@@ -1,0 +1,25 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/plugin-cache/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/plugin-cache",
+        "main": "packages/plugin-cache/src/index.ts",
+        "tsConfig": "packages/plugin-cache/tsconfig.lib.json",
+        "assets": ["packages/plugin-cache/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/plugin-cache/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
