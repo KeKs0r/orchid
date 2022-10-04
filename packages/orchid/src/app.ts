@@ -41,11 +41,11 @@ export function makeApp() {
   const run = async <Task extends TaskSpec<any, any>>(
     task: Task,
     input: GetInput<Task>,
-    context: Omit<GetContext<Task>, 'run'>
+    context: Omit<GetContext<Task>, 'run' | 'extendContext'>
   ): Promise<GetOutput<Task>> => {
     const taskObject = wrapToObject(task);
     const parentInput = input;
-    const baseNextContext: Omit<TaskContext, 'run'> = {
+    const baseNextContext: Omit<TaskContext, 'run' | 'extendContext'> = {
       ...context,
       parent: {
         task: taskObject,
@@ -71,7 +71,7 @@ export function makeApp() {
         task: SubTask,
         input: GetInput<SubTask>
       ): Promise<GetOutput<SubTask>> => {
-        const combinedContext: Omit<TaskContext, 'run'> = {
+        const combinedContext: Omit<TaskContext, 'run' | 'extendContext'> = {
           ...baseNextContext,
           ...nextContextExtension,
         };
@@ -93,7 +93,7 @@ export function makeApp() {
       task: Task,
       input: GetInput<Task>
     ) => {
-      const initalContext: Omit<TaskContext, 'run'> = {
+      const initalContext: Omit<TaskContext, 'run' | 'extendContext'> = {
         log,
       };
       return run(task, input, initalContext);
