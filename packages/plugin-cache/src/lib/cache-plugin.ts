@@ -75,13 +75,14 @@ export function createCachePlugin(options: CachePluginOptions) {
     if (processedCacheItem) {
       const serialized = task.cache.onPreSave
         ? task.cache.onPreSave(processedCacheItem)
-        : processedCacheItem.item;
+        : processedCacheItem;
       /**
        * If we processed the item, we might need to update the cache
        * TODO: This is not very optimized and is probably called too often
        */
       if (
         cacheItem?.result &&
+        serialized &&
         JSON.stringify(cacheItem.result) !== JSON.stringify(serialized)
       ) {
         await save(processedCacheItem);
