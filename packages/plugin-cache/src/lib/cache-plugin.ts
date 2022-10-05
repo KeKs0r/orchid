@@ -29,7 +29,7 @@ export interface TaskCacheExtension<
     item: CacheResult<any>,
     context: Context,
     input: Input
-  ) => Output;
+  ) => Output | null;
   /**
    * Process Item before storing into cache
    * Use Cases:
@@ -50,7 +50,7 @@ export function createCachePlugin(options: CachePluginOptions) {
       }
       const cacheResult = task.cache.onPreSave
         ? task.cache.onPreSave(value)
-        : result;
+        : value;
       const item = {
         meta: {
           createdDate: new Date().toISOString(),
