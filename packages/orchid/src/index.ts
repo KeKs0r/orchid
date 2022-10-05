@@ -1,6 +1,7 @@
 export { makeApp } from './app';
 export type {
   TaskSpec,
+  TaskSpecObject,
   TaskContext,
   GetInput,
   GetOutput,
