@@ -50,7 +50,7 @@ describe('Plugin Cache', () => {
     expect(spy).toHaveBeenCalledTimes(2);
   });
 
-  it.only('Migrate cache (+ check meta after)', async () => {
+  it('Migrate cache (+ check meta after)', async () => {
     const spy = vitest.fn((a) => a);
     const task = makeTask(spy, {
       getCacheKey(input) {
