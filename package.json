@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "test": "nx run-many --target=test --run",
+    "test": "yarn vitest . --run",
     "build": "nx run-many --target=build",
     "lint": "nx run-many --target=lint",
     "test:ci": "yarn nx affected --target=test --run",
