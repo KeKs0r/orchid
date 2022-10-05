@@ -19,6 +19,17 @@
       "options": {
         "lintFilePatterns": ["packages/plugin-cache/**/*.ts"]
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "vitest",
+            "forwardAllArgs": true
+          }
+        ]
+      }
     }
   },
   "tags": []
