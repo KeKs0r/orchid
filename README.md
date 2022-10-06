@@ -1,4 +1,4 @@
-# Orchid
+# 🌸 Orchid
 
 Task orchestrator to help with complex flows in your code. From local development to production.
 
