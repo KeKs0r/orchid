@@ -10,6 +10,11 @@ import {
   TaskSpecObject,
 } from './task.types';
 
+type RunContext<Context extends TaskContext> = Omit<
+  Context,
+  'run' | 'setContext' | 'getContext'
+> & { getContext?: (key: string) => any };
+
 export function makeApp() {
   const middlewares: Middleware[] = [];
 
@@ -41,11 +46,11 @@ export function makeApp() {
   const run = async <Task extends TaskSpec<any, any>>(
     task: Task,
     input: GetInput<Task>,
-    context: Omit<GetContext<Task>, 'run' | 'extendContext'>
+    context: RunContext<GetContext<Task>>
   ): Promise<GetOutput<Task>> => {
     const taskObject = wrapToObject(task);
     const parentInput = input;
-    const baseNextContext: Omit<TaskContext, 'run' | 'extendContext'> = {
+    const baseNextContext: RunContext<TaskContext> = {
       ...context,
       parent: {
         task: taskObject,
@@ -53,27 +58,32 @@ export function makeApp() {
       },
     };
 
-    const nextContextExtension: Record<string, any> = {};
+    const contextData: Record<string, any> = {};
 
-    function extendContext(key: string, value: any) {
-      if (nextContextExtension[key]) {
+    function setContext(key: string, value: any) {
+      if (contextData[key]) {
         context.log.warn(
           `Trying to extend context with key '${key}', but it already exists`
         );
       }
-      nextContextExtension[key] = value;
+      contextData[key] = value;
+    }
+
+    function getContext(key: string) {
+      return contextData[key] || context.getContext?.(key);
     }
 
     const currentContext: GetContext<Task> = {
       ...context,
-      extendContext,
+      setContext,
+      getContext,
       run: <SubTask extends TaskSpec<unknown, unknown>>(
         task: SubTask,
         input: GetInput<SubTask>
       ): Promise<GetOutput<SubTask>> => {
-        const combinedContext: Omit<TaskContext, 'run' | 'extendContext'> = {
+        const combinedContext: RunContext<TaskContext> = {
           ...baseNextContext,
-          ...nextContextExtension,
+          getContext,
         };
         return run(task, input, combinedContext);
       },
@@ -93,7 +103,7 @@ export function makeApp() {
       task: Task,
       input: GetInput<Task>
     ) => {
-      const initalContext: Omit<TaskContext, 'run' | 'extendContext'> = {
+      const initalContext: RunContext<TaskContext> = {
         log,
       };
       return run(task, input, initalContext);
