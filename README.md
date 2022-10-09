@@ -2,9 +2,11 @@
 
 Task orchestrator to help with complex flows in your code. From local development to production.
 
-- able to keep context (input / output of functions)
+- able to keep/store context (input / output of functions) for debugging purpose
 - intercept errors and give context to exactly which inputs lead to the error (+ dedicated logs for that subtask)
 - cache certain function calls
+- provide context for function calls that are request (e.g. tenantId) dependant
+- provide context for calls that relate to items of a worklist (e.g. transforming files in a folder, add current file to context)
 
 ```typescript
 const mainTask: TaskSpec = {
