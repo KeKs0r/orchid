@@ -40,19 +40,50 @@ describe('Tasks', () => {
     const sum = await app.run(sumTask, [1, 2, 3, 4, 5]);
     expect(sum).toEqual(15);
   });
+});
 
-  it('Can extend the context', async () => {
+describe('Context', () => {
+  const app = makeApp();
+  it('Can set simple context', async () => {
     async function outerTask(
       input: undefined,
-      { run, extendContext, foo }: TaskContext
+      { run, setContext, getContext }: TaskContext
     ) {
-      expect(foo).toBeFalsy();
+      expect(getContext('foo')).toBeFalsy();
       await run(innerTask, undefined);
-      extendContext('foo', 'bar');
+      setContext('foo', 'bar');
       await run(innerTask, 'bar');
     }
-    function innerTask(expected: string | undefined, context: TaskContext) {
-      expect(context.foo).toEqual(expected);
+    function innerTask(
+      expected: string | undefined,
+      { getContext }: TaskContext
+    ) {
+      expect(getContext('foo')).toEqual(expected);
+    }
+    await app.run(outerTask, undefined);
+  });
+
+  it('Can set nested context', async () => {
+    async function outerTask(
+      input: undefined,
+      { run, setContext }: TaskContext
+    ) {
+      setContext('foo', 'foo');
+      setContext('bar', 'bar');
+      await run(level1Task, undefined);
+    }
+    async function level1Task(
+      input: undefined,
+      { getContext, setContext, run }: TaskContext
+    ) {
+      expect(getContext('foo')).toEqual('foo');
+      expect(getContext('bar')).toEqual('bar');
+      setContext('bar', 'baz');
+      await run(level2Task, undefined);
+    }
+    async function level2Task(input: undefined, { getContext }: TaskContext) {
+      expect(getContext('foo')).toEqual('foo');
+      expect(getContext('bar')).toEqual('baz');
     }
     await app.run(outerTask, undefined);
   });
