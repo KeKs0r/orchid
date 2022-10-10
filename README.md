@@ -52,9 +52,9 @@ app.run(mainTask, 5);
 
 const mainTask: TaskSpec<undefined, Promise<number>> = {
   name: 'main',
-  async run(traceId: number, { run, log, extendContext }) {
+  async run(traceId: number, { run, log, setContext }) {
     // I can add something to the context, so all children have access to it
-    extendContext('traceId', traceId);
+    setContext('traceId', traceId);
 
     // I can run other tasks
     const list = run(listTask, 4);
@@ -87,7 +87,8 @@ function sumTask(list: number[]) {
   return list.reduce((a, b) => a + b, 0);
 }
 
-function doubleTask(input: number) {
+function doubleTask(input: number, { getContext, log }: TaskContext) {
+  log('Doubling for trace', getContext('traceId'));
   return input * 2;
 }
 ```
