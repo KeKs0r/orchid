@@ -6,6 +6,7 @@ import {
   ConsoleSpanExporter,
   BatchSpanProcessor,
 } from '@opentelemetry/sdk-trace-base';
+
 // import { TraceIdRatioBasedSampler } from '@opentelemetry/core';
 
 main();
@@ -54,10 +55,13 @@ async function main() {
       await run(
         'sub',
         async (span) => {
+          span.setAttribute('input', JSON.stringify({ foo: 'bar' }));
+          const list = Array.from({ length: 5 });
+
           await Promise.all(
-            new Array({ length: 5 }).map(async (a, idx) => {
+            list.map(async (a, idx) => {
               await wait(10 - idx);
-              const s = await run(
+              await run(
                 `list_${idx}`,
                 async (s) => {
                   if (idx === 2) {
