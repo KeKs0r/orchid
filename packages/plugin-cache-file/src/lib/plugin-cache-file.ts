@@ -2,7 +2,7 @@ import fs from 'fs';
 import { dirname, join, normalize } from 'path';
 import sanitize from 'sanitize-filename';
 import type { CacheResult, CacheStorage } from '@orchid/plugin-cache';
-import { assert } from '@orchid/util';
+import { ok } from 'assert';
 
 interface StorageOptions {
   basePath: string;
@@ -25,7 +25,7 @@ export function makeStorage(options: StorageOptions): CacheStorage {
 
   function read(path: string) {
     const fullPath = normalize(join(basePath, path));
-    assert(
+    ok(
       fullPath.startsWith(basePath),
       `${fullPath} does not seem to be in ${basePath}`
     );
@@ -45,7 +45,7 @@ export function makeStorage(options: StorageOptions): CacheStorage {
 
   function write(path: string, data: Record<string, any>) {
     const fullPath = normalize(join(basePath, path));
-    assert(
+    ok(
       fullPath.startsWith(basePath),
       `${fullPath} does not seem to be in ${basePath}`
     );
@@ -85,6 +85,21 @@ export function makeStorage(options: StorageOptions): CacheStorage {
         write(path, nextFileData);
       } else {
         write(path, item);
+      }
+    },
+    drop(key: string) {
+      const { field, path } = parseKey(key);
+      if (field) {
+        const data = read(path);
+        if (data) {
+          delete data[field];
+          write(path, data);
+        }
+      } else {
+        const fullPath = normalize(join(basePath, path));
+        if (fs.existsSync(fullPath)) {
+          fs.unlinkSync(fullPath);
+        }
       }
     },
   };
