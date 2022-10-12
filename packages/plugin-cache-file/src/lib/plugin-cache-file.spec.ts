@@ -7,6 +7,10 @@ describe('@orchid/plugin-cache-file', () => {
   const storage = makeStorage({
     basePath: fixturePath,
   });
+  const meta = {
+    createdDate: new Date().toISOString(),
+    version: 1,
+  };
   beforeAll(() => {
     fs.rmSync(fixturePath, { recursive: true, force: true });
   });
@@ -23,10 +27,7 @@ describe('@orchid/plugin-cache-file', () => {
   it('Can write full file', async () => {
     storage.save('single-file', {
       result: { foo: 'bar' },
-      meta: {
-        createdDate: new Date().toISOString(),
-        version: 1,
-      },
+      meta,
     });
     const stored = await storage.load('single-file');
     expect(stored).toHaveProperty('result.foo', 'bar');
@@ -35,10 +36,6 @@ describe('@orchid/plugin-cache-file', () => {
   });
 
   it('Can write item in file', async () => {
-    const meta = {
-      createdDate: new Date().toISOString(),
-      version: 1,
-    };
     storage.save('directory/multi-file:key1', {
       result: { foo: 'baz' },
       meta,
@@ -56,5 +53,57 @@ describe('@orchid/plugin-cache-file', () => {
     expect(k2).toHaveProperty('result.foo', 'baz2');
     expect(k2).toHaveProperty('meta.version', 1);
     expect(k2).toHaveProperty('meta.createdDate');
+  });
+
+  it('Can drop item in file', async () => {
+    const key1 = 'directory/drop-multi-file:key1';
+    const key2 = 'directory/drop-multi-file:key2';
+    await Promise.all([
+      storage.save(key1, {
+        result: { foo: 'baz' },
+        meta,
+      }),
+      storage.save(key2, {
+        result: { foo: 'baz2' },
+        meta,
+      }),
+    ]);
+
+    const v1 = await storage.load(key1);
+    const v2 = await storage.load(key2);
+    expect(v1).toBeTruthy();
+    expect(v2).toBeTruthy();
+    await storage.drop(key1);
+
+    const k1 = await storage.load(key1);
+    const k2 = await storage.load(key2);
+    expect(k1).toBeFalsy();
+    expect(k2).toBeTruthy();
+  });
+
+  it('Can drop complete file', async () => {
+    const key1 = 'directory/drop-file-1';
+    const key2 = 'directory/drop-file-2';
+    await Promise.all([
+      storage.save(key1, {
+        result: { foo: 'baz' },
+        meta,
+      }),
+      storage.save(key2, {
+        result: { foo: 'baz2' },
+        meta,
+      }),
+    ]);
+
+    const v1 = await storage.load(key1);
+    const v2 = await storage.load(key2);
+    expect(v1).toBeTruthy();
+    expect(v2).toBeTruthy();
+    await storage.drop(key1);
+
+    const k1 = await storage.load(key1);
+    const k2 = await storage.load(key2);
+    expect(k1).toBeFalsy();
+    expect(k2).toBeTruthy();
   });
 });
