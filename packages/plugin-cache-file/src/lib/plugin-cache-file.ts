@@ -10,13 +10,21 @@ interface StorageOptions {
 export function makeStorage(options: StorageOptions): CacheStorage {
   const { basePath } = options;
   const existingFolders = new Set();
-  ensurePath(basePath);
+
+  function getFullPath(path: string) {
+    const fullPath = normalize(join(basePath, path));
+    ok(
+      fullPath.startsWith(basePath),
+      `${fullPath} does not seem to be in ${basePath}`
+    );
+    return fullPath;
+  }
 
   function ensurePath(path: string) {
     if (existingFolders.has(path)) {
       return;
     }
-    const fullPath = join(basePath, path);
+    const fullPath = getFullPath(path);
     if (!fs.existsSync(fullPath)) {
       fs.mkdirSync(fullPath, { recursive: true });
     }
@@ -44,12 +52,9 @@ export function makeStorage(options: StorageOptions): CacheStorage {
   }
 
   function write(path: string, data: Record<string, any>) {
-    const fullPath = normalize(join(basePath, path));
-    ok(
-      fullPath.startsWith(basePath),
-      `${fullPath} does not seem to be in ${basePath}`
-    );
-    ensurePath(dirname(fullPath));
+    ensurePath(dirname(path));
+    const fullPath = getFullPath(path);
+
     const serialized = JSON.stringify(data);
     fs.writeFileSync(fullPath, serialized);
   }
@@ -96,7 +101,7 @@ export function makeStorage(options: StorageOptions): CacheStorage {
           write(path, data);
         }
       } else {
-        const fullPath = normalize(join(basePath, path));
+        const fullPath = getFullPath(path);
         if (fs.existsSync(fullPath)) {
           fs.unlinkSync(fullPath);
         }
