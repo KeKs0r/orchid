@@ -10,7 +10,6 @@ interface StorageOptions {
 export function makeStorage(options: StorageOptions): CacheStorage {
   const { basePath } = options;
   const existingFolders = new Set();
-  ensurePath(basePath);
 
   function getFullPath(path: string) {
     const fullPath = normalize(join(basePath, path));
@@ -53,8 +52,9 @@ export function makeStorage(options: StorageOptions): CacheStorage {
   }
 
   function write(path: string, data: Record<string, any>) {
+    ensurePath(dirname(path));
     const fullPath = getFullPath(path);
-    ensurePath(dirname(fullPath));
+
     const serialized = JSON.stringify(data);
     fs.writeFileSync(fullPath, serialized);
   }
