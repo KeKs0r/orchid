@@ -1,5 +1,5 @@
 import { useTraceContext } from '../TraceContext';
-import { Breadcrumbs } from './Breadcrumbs';
+import { SpanBreadcrumbs } from './Breadcrumbs';
 import { SpanDetailsSummary } from './SpanDetailsSummary';
 
 /**
@@ -17,7 +17,7 @@ export function SpanDetails() {
 
   return (
     <div className="p-4">
-      <Breadcrumbs span={span} />
+      <SpanBreadcrumbs span={span} />
       <SpanDetailsSummary span={span} />
     </div>
   );

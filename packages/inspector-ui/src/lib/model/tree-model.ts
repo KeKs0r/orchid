@@ -49,6 +49,11 @@ export function flattenTree(root: SpanItem): SpanItem[] {
   return [root, ...root.children.flatMap((child) => flattenTree(child))];
 }
 
+export function getBreadcrumbs(root: SpanItem): SpanItem[] {
+  const before = root.parent ? getBreadcrumbs(root.parent) : [];
+  return [...before, root];
+}
+
 export function toTree(spans: RawSpan[]): SpanItem {
   const spansById = Object.fromEntries(spans.map((span) => [span.id, span]));
 
