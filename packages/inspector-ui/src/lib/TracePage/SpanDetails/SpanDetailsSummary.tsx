@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Avatar } from '@mui/material';
+import { Card, CardHeader, Avatar } from '@mui/material';
 import {
   CheckCircleIcon,
   InformationCircleIcon,
