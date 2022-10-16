@@ -1,6 +1,7 @@
 import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { ok } from 'assert';
 import { sortBy } from 'lodash';
+import { SpanItem } from './SpanItem';
 
 /**
  * This is the mapping that happens in the ConsoleSpanExporter._exportInfo
@@ -24,7 +25,7 @@ export type RawSpan = Omit<
   timestamp: number;
   duration: number;
 };
-export type SpanItem = RawSpan & { children: SpanItem[] };
+// export type SpanItem = RawSpan & { children: SpanItem[]; parent?: SpanItem };
 
 export type Trace = {
   id: string;
@@ -57,18 +58,24 @@ export function toTree(spans: RawSpan[]): SpanItem {
     'Expected to have only one span without existing parent'
   );
   const root = missingParent[0];
-  return getChildren(root, spans);
+
+  return makeItem(root, spans);
 }
 
-function getChildren(parent: RawSpan, spans: RawSpan[]): SpanItem {
-  return {
-    ...parent,
-    /** We probably want this sorted by "start" */
-    children: sortBy(
-      spans
-        .filter((s) => s.parentId === parent.id)
-        .map((s) => getChildren(s, spans)),
-      'timestamp'
-    ),
-  };
+function addChildren(parent: SpanItem, spans: RawSpan[]) {
+  const children = sortBy(
+    spans.filter((s) => s.parentId === parent.id),
+    'timestamp'
+  );
+
+  parent.addChildren(children);
+  parent.children.forEach((child) => {
+    addChildren(child, spans);
+  });
+}
+
+function makeItem(parent: RawSpan, spans: RawSpan[]): SpanItem {
+  const item = new SpanItem(parent);
+  addChildren(item, spans);
+  return item;
 }
