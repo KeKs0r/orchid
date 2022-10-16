@@ -1,7 +1,7 @@
 import { SpanStatusCode } from '@opentelemetry/api';
-import { SpanItem } from './tree-model';
+import { SpanItem } from './SpanItem';
 
-type UISpanStatus = 'error' | 'warn' | 'success';
+export type UISpanStatus = 'error' | 'warn' | 'success';
 
 export function getStatus(span: SpanItem): UISpanStatus {
   if (
