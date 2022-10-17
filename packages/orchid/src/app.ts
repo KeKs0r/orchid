@@ -1,14 +1,14 @@
-import { Middleware, Next } from './middleware.types';
-import {
-  Logger,
+import type { Middleware, Next } from './model/middleware.types';
+import type {
   TaskContext,
   TaskSpec,
   GetContext,
   GetInput,
   GetOutput,
-  wrapToObject,
   TaskSpecObject,
-} from './task.types';
+} from './model/task.types';
+import { wrapToObject } from './model/task.types';
+import type { Logger } from './model/logger.types';
 
 type RunContext<Context extends TaskContext> = Omit<
   Context,

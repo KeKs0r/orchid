@@ -1,3 +1,5 @@
+import { Logger } from './logger.types';
+
 export type TaskSpec<
   Input,
   Output,
@@ -70,10 +72,3 @@ export type TaskContext = {
     input: unknown;
   };
 } & TaskContextExtension;
-
-export interface Logger {
-  debug(...args: unknown[]): void;
-  info(...args: unknown[]): void;
-  warn(...args: unknown[]): void;
-  error(...args: unknown[]): void;
-}

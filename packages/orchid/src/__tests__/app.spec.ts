@@ -1,4 +1,6 @@
 import { makeApp } from '../app';
+import { TaskContext } from '../model/task.types';
+
 import {
   addOneTask,
   doubleTask,
@@ -7,7 +9,6 @@ import {
   sumTask,
 } from './example-task';
 import { makeExampleMiddleware } from './example-middleware';
-import { TaskContext } from '../task.types';
 
 declare global {
   interface TaskContextExtension {
