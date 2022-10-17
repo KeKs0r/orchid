@@ -1,4 +1,4 @@
-import { TaskContext, TaskSpec } from '../task.types';
+import { TaskContext, TaskSpec } from '../model/task.types';
 
 export const mainTask: TaskSpec<undefined, Promise<number>> = {
   name: 'main',
