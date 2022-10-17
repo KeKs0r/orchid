@@ -9,6 +9,7 @@
     "orchid": "packages/orchid",
     "plugin-cache": "packages/plugin-cache",
     "plugin-cache-file": "packages/plugin-cache-file",
+    "plugin-opentelemetry": "packages/plugin-opentelemetry",
     "util": "packages/util"
   }
 }

@@ -20,6 +20,9 @@
       "@orchid/logger-terminal": ["packages/logger-terminal/src/index.ts"],
       "@orchid/plugin-cache": ["packages/plugin-cache/src/index.ts"],
       "@orchid/plugin-cache-file": ["packages/plugin-cache-file/src/index.ts"],
+      "@orchid/plugin-opentelemetry": [
+        "packages/plugin-opentelemetry/src/index.ts"
+      ],
       "@orchid/util": ["packages/util/src/index.ts"],
       "orchid": ["packages/orchid/src/index.ts"]
     }
