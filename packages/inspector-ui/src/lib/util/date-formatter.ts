@@ -1,4 +1,3 @@
-import { InterestsRounded } from '@mui/icons-material';
 import { parseISO } from 'date-fns';
 
 export const dateFormatter = new Intl.DateTimeFormat('en-US', {

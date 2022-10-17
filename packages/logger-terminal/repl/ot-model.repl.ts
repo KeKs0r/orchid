@@ -16,7 +16,10 @@ async function main() {
     // See details of ParentBasedSampler below
   });
 
-  const exporter = new ConsoleSpanExporter();
+  // const exporter = new ConsoleSpanExporter();
+  const exporter = new OTLPTraceExporter({
+    url: 'http://localhost:4200/api/ingest',
+  });
   const processor = new BatchSpanProcessor(exporter);
   provider.addSpanProcessor(processor);
 

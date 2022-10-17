@@ -8,6 +8,7 @@ import {
   createCachePlugin,
   CacheResult,
 } from '@orchid/plugin-cache';
+
 import { listTask, getListTask, List } from '../example-task';
 
 const getList: TaskSpec<number, List, TaskContext> = {

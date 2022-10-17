@@ -1,4 +1,5 @@
 import { describe, it, Mock } from 'vitest';
+
 import { makeApp, TaskSpecObject } from 'orchid';
 
 import { CacheResult, CacheStorage } from './cache.types';
@@ -144,6 +145,9 @@ function makeMemoryStorage(): CacheStorage & {
     },
     getData() {
       return data;
+    },
+    drop(key) {
+      delete data[key];
     },
   };
 }
