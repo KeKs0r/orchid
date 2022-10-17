@@ -4,8 +4,10 @@ import TreeView from '@mui/lab/TreeView';
 import { ChevronRightIcon, ChevronDownIcon } from '@heroicons/react/20/solid';
 import TreeItem from '@mui/lab/TreeItem';
 
-import { SpanItem } from '../model/tree-model';
 import { useTraceContext } from './TraceContext';
+import { SpanItem } from '../model/SpanItem';
+import { getStatus } from '../model/span-model';
+import clsx from 'clsx';
 
 export interface SpanTreeProps {
   root: SpanItem;
@@ -33,8 +35,16 @@ interface SpanTreeItemProps {
 }
 
 export function SpanTreeItem({ item }: SpanTreeItemProps) {
+  const status = getStatus(item);
   return (
-    <TreeItem nodeId={item.id} label={item.name}>
+    <TreeItem
+      nodeId={item.id}
+      label={item.name}
+      className={clsx({
+        'text-red-500': status === 'error',
+        'text-yellow-500': status === 'warn',
+      })}
+    >
       {item.children.length > 0 && (
         <>
           {item.children.map((child) => (

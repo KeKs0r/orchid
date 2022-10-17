@@ -2,7 +2,7 @@ import { Card, CardHeader, Avatar } from '@mui/material';
 import {
   CheckCircleIcon,
   InformationCircleIcon,
-  ExclamationCircleIcon,
+  FireIcon,
   ClockIcon,
 } from '@heroicons/react/24/outline';
 import { SpanItem } from '../../model/SpanItem';
@@ -43,7 +43,7 @@ function StatusAvatar({ status }: { status: UISpanStatus }) {
     case 'error':
       return (
         <Avatar className="bg-transparent">
-          <ExclamationCircleIcon className="text-red-500" />
+          <FireIcon className="text-red-500" />
         </Avatar>
       );
     case 'warn':
