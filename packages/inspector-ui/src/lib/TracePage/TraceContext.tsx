@@ -1,6 +1,9 @@
 import { ok } from 'assert';
+
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { flattenTree, SpanItem, Trace } from '../model/tree-model';
+
+import { SpanItem } from '../model/SpanItem';
+import { flattenTree, Trace } from '../model/tree-model';
 
 interface TraceContextProps {
   trace: Trace;

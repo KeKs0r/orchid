@@ -1,7 +1,7 @@
 import { useTraceContext } from '../TraceContext';
+
 import { SpanBreadcrumbs } from './Breadcrumbs';
 import { JSONCard } from './JsonCard';
-import { JSONViewer } from './JSONViewer';
 import { SpanDetailsSummary } from './SpanDetailsSummary';
 import { SpanTimeline } from './SpanTimeline';
 
@@ -18,12 +18,14 @@ import { SpanTimeline } from './SpanTimeline';
 export function SpanDetails() {
   const { selectedSpan: span } = useTraceContext();
 
-  const input = span.attributes['input']
-    ? JSON.parse(span.attributes['input'])
-    : undefined;
-  const output = span.attributes['output']
-    ? JSON.parse(span.attributes['output'])
-    : undefined;
+  const input =
+    span.attributes['input'] && typeof span.attributes['input'] === 'string'
+      ? JSON.parse(span.attributes['input'])
+      : undefined;
+  const output =
+    span.attributes['output'] && typeof span.attributes['output'] === 'string'
+      ? JSON.parse(span.attributes['output'])
+      : undefined;
 
   return (
     <div className="p-4">

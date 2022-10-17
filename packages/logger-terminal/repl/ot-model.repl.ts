@@ -2,10 +2,8 @@
 
 import { Span, SpanStatusCode, trace, context } from '@opentelemetry/api';
 import { NodeTracerProvider } from '@opentelemetry/sdk-trace-node';
-import {
-  ConsoleSpanExporter,
-  BatchSpanProcessor,
-} from '@opentelemetry/sdk-trace-base';
+import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
 
 // import { TraceIdRatioBasedSampler } from '@opentelemetry/core';
 

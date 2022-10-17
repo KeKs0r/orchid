@@ -1,9 +1,11 @@
 import { z } from 'zod';
-import { Attributes } from '@opentelemetry/api';
+import { Attributes, HrTime } from '@opentelemetry/api';
 import { hrTimeToTimeStamp } from '@opentelemetry/core';
-import { SpanItem } from './SpanItem';
-import { isTruthy } from '@orchid/util';
 import { set, sortBy } from 'lodash';
+
+import { isTruthy } from '@orchid/util';
+
+import { SpanItem } from './SpanItem';
 
 export type TimelineItem =
   | ExceptionItem
@@ -95,6 +97,9 @@ function getEvents(span: SpanItem): EventItem[] {
     );
 }
 
+const HrTimeSchema = z
+  .tuple([z.number(), z.number()])
+  .transform<HrTime>((val) => val as HrTime);
 const ExceptionEventSchema = z.object({
   name: z.literal('exception'),
   attributes: z.object({
@@ -102,7 +107,7 @@ const ExceptionEventSchema = z.object({
     'exception.message': z.string(),
     'exception.stacktrace': z.string(),
   }),
-  time: z.tuple([z.number(), z.number()]),
+  time: HrTimeSchema,
 });
 type ExceptionEvent = z.infer<typeof ExceptionEventSchema>;
 
