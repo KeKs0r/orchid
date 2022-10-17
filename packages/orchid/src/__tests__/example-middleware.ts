@@ -1,5 +1,5 @@
-import { Middleware } from '../middleware.types';
-import { TaskSpec } from '../task.types';
+import { Middleware } from '../model/middleware.types';
+import { TaskSpec } from '../model/task.types';
 
 interface ExampleMiddlewareOptions {
   onPreTask?: (task: TaskSpec<any, any>, input: any) => void;
