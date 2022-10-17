@@ -35,7 +35,9 @@ export function SpanDetails() {
           {output && <JSONCard title="Output" json={output} />}
         </div>
       ) : null}
-      <SpanTimeline span={span} />
+      <div className="mt-4">
+        <SpanTimeline span={span} />
+      </div>
     </div>
   );
 }

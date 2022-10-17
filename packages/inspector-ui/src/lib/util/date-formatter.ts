@@ -1,3 +1,4 @@
+import { InterestsRounded } from '@mui/icons-material';
 import { parseISO } from 'date-fns';
 
 export const dateFormatter = new Intl.DateTimeFormat('en-US', {
@@ -17,4 +18,15 @@ export function renderDate(date: string | number) {
 
 export function renderDuration(ms: number) {
   return `${ms} ms`;
+}
+
+const eventTimeFormatter = new Intl.DateTimeFormat('en-US', {
+  minute: 'numeric',
+  second: 'numeric',
+  fractionalSecondDigits: 3,
+} as any);
+
+export function renderEventTime(timestamp: number) {
+  const date = new Date(timestamp);
+  return eventTimeFormatter.format(date);
 }

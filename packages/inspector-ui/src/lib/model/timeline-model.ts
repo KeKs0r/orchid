@@ -3,7 +3,7 @@ import { Attributes } from '@opentelemetry/api';
 import { hrTimeToTimeStamp } from '@opentelemetry/core';
 import { SpanItem } from './SpanItem';
 import { isTruthy } from '@orchid/util';
-import { set } from 'lodash';
+import { set, sortBy } from 'lodash';
 
 export type TimelineItem =
   | ExceptionItem
@@ -34,6 +34,7 @@ export interface LogItem extends BaseTimelineItem {
 }
 export interface EventItem extends BaseTimelineItem {
   type: 'event';
+  name: string;
   attributes?: Attributes;
 }
 export interface StartItem extends BaseTimelineItem {
@@ -48,13 +49,16 @@ export interface ChildItem extends BaseTimelineItem {
 }
 
 export function getTimeline(span: SpanItem) {
-  return [
-    ...getStartEnd(span),
-    ...getChildren(span),
-    ...getEvents(span),
-    ...getExceptions(span),
-    ...getLogs(span),
-  ];
+  return sortBy(
+    [
+      ...getStartEnd(span),
+      ...getChildren(span),
+      ...getEvents(span),
+      ...getExceptions(span),
+      ...getLogs(span),
+    ],
+    'timestamp'
+  );
 }
 
 function getStartEnd(span: SpanItem): [StartItem, EndItem] {
@@ -84,6 +88,7 @@ function getEvents(span: SpanItem): EventItem[] {
     .map(
       (event): EventItem => ({
         type: 'event',
+        name: event.name,
         timestamp: new Date(hrTimeToTimeStamp(event.time)).getTime(),
         attributes: event.attributes,
       })
