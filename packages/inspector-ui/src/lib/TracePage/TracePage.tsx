@@ -1,5 +1,5 @@
 import { TraceContextProvider } from './TraceContext';
-import { TraceLayout } from './TraceLayout';
+import { TraceLayout } from './MUITraceLayout';
 import { data } from '../../data';
 import { SpanTreeProps, SpanTree } from './SpanTree';
 import { toTrace } from '../model/tree-model';
