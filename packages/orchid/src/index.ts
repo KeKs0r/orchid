@@ -6,5 +6,6 @@ export type {
   GetInput,
   GetOutput,
   GetContext,
-} from './task.types';
-export type { Middleware, Next } from './middleware.types';
+} from './model/task.types';
+export type { Middleware, Next } from './model/middleware.types';
+export type { Logger, LogFn, LogLevel } from './model/logger.types';
