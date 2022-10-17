@@ -1,0 +1,25 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/logger-terminal/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/logger-terminal",
+        "main": "packages/logger-terminal/src/index.ts",
+        "tsConfig": "packages/logger-terminal/tsconfig.lib.json",
+        "assets": ["packages/logger-terminal/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/logger-terminal/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

@@ -16,6 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@orchid/e2e-tests": ["packages/e2e-tests/src/index.ts"],
+      "@orchid/inspector-ui": ["packages/inspector-ui/src/index.ts"],
+      "@orchid/logger-terminal": ["packages/logger-terminal/src/index.ts"],
       "@orchid/plugin-cache": ["packages/plugin-cache/src/index.ts"],
       "@orchid/plugin-cache-file": ["packages/plugin-cache-file/src/index.ts"],
       "@orchid/plugin-opentelemetry": [
