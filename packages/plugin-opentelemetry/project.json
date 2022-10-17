@@ -1,0 +1,25 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/plugin-opentelemetry/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/plugin-opentelemetry",
+        "main": "packages/plugin-opentelemetry/src/index.ts",
+        "tsConfig": "packages/plugin-opentelemetry/tsconfig.lib.json",
+        "assets": ["packages/plugin-opentelemetry/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/plugin-opentelemetry/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}
