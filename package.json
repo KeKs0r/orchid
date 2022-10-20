@@ -4,6 +4,7 @@
   "license": "MIT",
   "scripts": {
     "test": "yarn vitest . --run",
+    "test:watch": "yarn vitest .",
     "build": "nx run-many --target=build",
     "lint": "nx run-many --target=lint",
     "test:ci": "yarn nx affected --target=test --run",
