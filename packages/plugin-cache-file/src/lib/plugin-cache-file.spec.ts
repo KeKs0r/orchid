@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { join } from 'path';
+
 import { makeStorage } from './plugin-cache-file';
 
 describe('@orchid/plugin-cache-file', () => {
@@ -79,6 +80,13 @@ describe('@orchid/plugin-cache-file', () => {
     const k2 = await storage.load(key2);
     expect(k1).toBeFalsy();
     expect(k2).toBeTruthy();
+  });
+
+  it('Can use url as key', async () => {
+    const key = 'directory/url:https://www.google.com/';
+    await storage.save(key, { result: { foo: 'google' }, meta });
+    const r = await storage.load(key);
+    expect(r).toHaveProperty('result.foo', 'google');
   });
 
   it('Can drop complete file', async () => {
