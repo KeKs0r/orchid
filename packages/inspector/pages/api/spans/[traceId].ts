@@ -1,6 +1,8 @@
+import { ok } from 'assert';
+
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { findSpansByTraceId } from '@orchid/storage-nedb';
+import { repository } from '../../../lib/repository';
 
 export default async function spanRoute(
   req: NextApiRequest,
@@ -8,7 +10,8 @@ export default async function spanRoute(
 ) {
   const { traceId } = req.query;
 
-  const spans = await findSpansByTraceId(traceId);
+  ok(typeof traceId === 'string', 'Traceid should be a string');
+  const spans = await repository.findSpansByTraceId(traceId);
 
   res.json({ spans });
 }
