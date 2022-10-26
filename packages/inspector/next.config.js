@@ -8,9 +8,13 @@ const { withNx } = require('@nrwl/next/plugins/with-nx');
  **/
 const nextConfig = {
   swcMinify: true,
+
   reactStrictMode: true,
   experimental: {
     appDir: true,
+    fontLoaders: [
+      { loader: '@next/font/google', options: { subsets: ['latin'] } },
+    ],
   },
   nx: {
     // Set this to true if you would like to to use SVGR
