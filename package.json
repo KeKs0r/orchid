@@ -20,12 +20,12 @@
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
-    "@fontsource/roboto": "^4.5.8",
     "@headlessui/react": "^1.7.3",
     "@heroicons/react": "^2.0.12",
     "@mui/icons-material": "^5.10.9",
     "@mui/lab": "^5.0.0-alpha.103",
     "@mui/material": "^5.10.9",
+    "@next/font": "^13.0.0",
     "@nrwl/next": "^14.8.4",
     "@opentelemetry/api": "^1.2.0",
     "@opentelemetry/auto-instrumentations-node": "^0.33.1",
@@ -45,6 +45,7 @@
     "react-json-tree": "^0.17.0",
     "regenerator-runtime": "0.13.7",
     "sanitize-filename": "^1.6.3",
+    "server-only": "^0.0.1",
     "tslib": "^2.3.0",
     "zod": "^3.19.1"
   },

@@ -1,4 +1,4 @@
-import { writeFileSync } from 'fs';
+import 'server-only';
 import { join } from 'path';
 
 import { makeRepository } from '@orchid/storage-nedb';

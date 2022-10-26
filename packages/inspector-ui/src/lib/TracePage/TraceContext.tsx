@@ -1,3 +1,4 @@
+'use client';
 import { ok } from 'assert';
 
 import React, { createContext, useContext, useMemo, useState } from 'react';
