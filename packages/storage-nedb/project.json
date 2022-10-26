@@ -22,7 +22,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/storage-nedb"],
+      "outputs": ["{workspaceRoot}/coverage/packages/storage-nedb"],
       "options": {
         "jestConfig": "packages/storage-nedb/jest.config.ts",
         "passWithNoTests": true
