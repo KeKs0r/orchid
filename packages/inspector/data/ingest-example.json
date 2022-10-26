@@ -1,0 +1,197 @@
+{
+  "resourceSpans": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "service.name",
+            "value": { "stringValue": "unknown_service:/usr/local/bin/node" }
+          },
+          {
+            "key": "telemetry.sdk.language",
+            "value": { "stringValue": "nodejs" }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": { "stringValue": "opentelemetry" }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": { "stringValue": "1.7.0" }
+          }
+        ],
+        "droppedAttributesCount": 0
+      },
+      "scopeSpans": [
+        {
+          "scope": { "name": "main" },
+          "spans": [
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "dcd9774f9fff8ab8",
+              "parentSpanId": "645a31c81f7575f4",
+              "name": "pre",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297043318800,
+              "endTimeUnixNano": 1666692297047120000,
+              "attributes": [],
+              "droppedAttributesCount": 0,
+              "events": [
+                {
+                  "attributes": [
+                    { "key": "foo", "value": { "stringValue": "bar" } }
+                  ],
+                  "name": "myEvent",
+                  "timeUnixNano": 1666692297043477500,
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "attributes": [
+                    {
+                      "key": "exception.type",
+                      "value": { "stringValue": "Error" }
+                    },
+                    {
+                      "key": "exception.message",
+                      "value": { "stringValue": "My Exception" }
+                    },
+                    {
+                      "key": "exception.stacktrace",
+                      "value": {
+                        "stringValue": "Error: My Exception\n    at /Users/marc/Workspace/orchid/packages/logger-terminal/repl/ot-model.repl.ts:50:29\n    at Generator.next (<anonymous>)\n    at /Users/marc/Workspace/orchid/node_modules/tslib/tslib.js:118:75\n    at new Promise (<anonymous>)\n    at Object.__awaiter (/Users/marc/Workspace/orchid/node_modules/tslib/tslib.js:114:16)\n    at /Users/marc/Workspace/orchid/packages/logger-terminal/repl/ot-model.repl.ts:46:21\n    at /Users/marc/Workspace/orchid/packages/logger-terminal/repl/ot-model.repl.ts:36:11\n    at Generator.next (<anonymous>)\n    at /Users/marc/Workspace/orchid/node_modules/tslib/tslib.js:118:75\n    at new Promise (<anonymous>)"
+                      }
+                    }
+                  ],
+                  "name": "exception",
+                  "timeUnixNano": 1666692297043601000,
+                  "droppedAttributesCount": 0
+                }
+              ],
+              "droppedEventsCount": 0,
+              "status": { "code": 0 },
+              "links": [],
+              "droppedLinksCount": 0
+            },
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "69226b4fb93a0058",
+              "parentSpanId": "32e3dae3fc0ea4a2",
+              "name": "list_4",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297054444800,
+              "endTimeUnixNano": 1666692297057566700,
+              "attributes": [],
+              "droppedAttributesCount": 0,
+              "events": [],
+              "droppedEventsCount": 0,
+              "status": { "code": 1 },
+              "links": [],
+              "droppedLinksCount": 0
+            },
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "4feb393f60b39d2c",
+              "parentSpanId": "32e3dae3fc0ea4a2",
+              "name": "list_3",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297054708200,
+              "endTimeUnixNano": 1666692297057605600,
+              "attributes": [],
+              "droppedAttributesCount": 0,
+              "events": [],
+              "droppedEventsCount": 0,
+              "status": { "code": 0 },
+              "links": [],
+              "droppedLinksCount": 0
+            },
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "59c78cedcdedc7e9",
+              "parentSpanId": "32e3dae3fc0ea4a2",
+              "name": "list_2",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297055975700,
+              "endTimeUnixNano": 1666692297059735800,
+              "attributes": [],
+              "droppedAttributesCount": 0,
+              "events": [],
+              "droppedEventsCount": 0,
+              "status": { "code": 2, "message": "I hate index 2" },
+              "links": [],
+              "droppedLinksCount": 0
+            },
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "d228848cf8b2bfce",
+              "parentSpanId": "32e3dae3fc0ea4a2",
+              "name": "list_1",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297056156000,
+              "endTimeUnixNano": 1666692297059773400,
+              "attributes": [],
+              "droppedAttributesCount": 0,
+              "events": [],
+              "droppedEventsCount": 0,
+              "status": { "code": 0 },
+              "links": [],
+              "droppedLinksCount": 0
+            },
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "9d74036fd5624961",
+              "parentSpanId": "32e3dae3fc0ea4a2",
+              "name": "list_0",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297057454600,
+              "endTimeUnixNano": 1666692297060976400,
+              "attributes": [],
+              "droppedAttributesCount": 0,
+              "events": [],
+              "droppedEventsCount": 0,
+              "status": { "code": 0 },
+              "links": [],
+              "droppedLinksCount": 0
+            },
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "32e3dae3fc0ea4a2",
+              "parentSpanId": "645a31c81f7575f4",
+              "name": "sub",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297047392300,
+              "endTimeUnixNano": 1666692297061004300,
+              "attributes": [
+                {
+                  "key": "input",
+                  "value": { "stringValue": "{\"foo\":\"bar\"}" }
+                }
+              ],
+              "droppedAttributesCount": 0,
+              "events": [],
+              "droppedEventsCount": 0,
+              "status": { "code": 0 },
+              "links": [],
+              "droppedLinksCount": 0
+            },
+            {
+              "traceId": "6851abe366cb76210151cc1f8108a9cd",
+              "spanId": "645a31c81f7575f4",
+              "parentSpanId": "87d85c0b1e491528",
+              "name": "main",
+              "kind": 1,
+              "startTimeUnixNano": 1666692297036831700,
+              "endTimeUnixNano": 1666692297061017000,
+              "attributes": [],
+              "droppedAttributesCount": 0,
+              "events": [],
+              "droppedEventsCount": 0,
+              "status": { "code": 0 },
+              "links": [],
+              "droppedLinksCount": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
