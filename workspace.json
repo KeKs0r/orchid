@@ -10,6 +10,7 @@
     "plugin-cache": "packages/plugin-cache",
     "plugin-cache-file": "packages/plugin-cache-file",
     "plugin-opentelemetry": "packages/plugin-opentelemetry",
+    "storage-nedb": "packages/storage-nedb",
     "util": "packages/util"
   }
 }
