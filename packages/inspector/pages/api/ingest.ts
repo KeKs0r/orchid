@@ -9,13 +9,16 @@ export default async function ingestApi(
 ) {
   const request = req.body as IExportTraceServiceRequest;
 
-  const spans = request.resourceSpans.flatMap((resourceSpan) =>
-    resourceSpan.scopeSpans.flatMap((scopeSpan) => scopeSpan.spans)
-  );
+  const spans =
+    request.resourceSpans?.flatMap((resourceSpan) =>
+      resourceSpan.scopeSpans.flatMap((scopeSpan) => scopeSpan.spans || [])
+    ) || [];
   const traceId = [...new Set([...spans.map((a) => a.traceId)])];
   console.log('Ingested Traces', traceId);
 
-  await repository.insert(spans);
+  if (spans.length) {
+    await repository.insert(spans);
+  }
 
   res.json({ ok: true });
 }

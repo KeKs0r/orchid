@@ -1,4 +1,7 @@
-import * as React from 'react';
+'use client';
+
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -41,11 +44,11 @@ export function TraceLayout({
   children,
   aside,
 }: {
-  children: React.ReactNode;
-  aside: React.ReactNode;
+  children: ReactNode;
+  aside: ReactNode;
 }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
