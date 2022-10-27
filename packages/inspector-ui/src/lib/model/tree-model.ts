@@ -1,38 +1,22 @@
-import type { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { ok } from 'assert';
-import { sortBy } from 'lodash';
-import { SpanItem } from './SpanItem';
 
-/**
- * This is the mapping that happens in the ConsoleSpanExporter._exportInfo
- * I think we will use a different exporter / interface for real world.
- * node_modules/@opentelemetry/sdk-trace-base/build/src/export/ConsoleSpanExporter.js
- */
-export type RawSpan = Omit<
-  ReadableSpan,
-  | 'spanContext'
-  | 'duration'
-  | 'startTime'
-  | 'endTime'
-  | 'ended'
-  | 'resource'
-  | 'instrumentationLibrary'
-  | 'parentSpanId'
-> & {
-  traceId: string;
-  id: string;
-  parentId: string;
-  timestamp: number;
-  duration: number;
-};
-// export type SpanItem = RawSpan & { children: SpanItem[]; parent?: SpanItem };
+import type { ISpan } from '@opentelemetry/otlp-transformer';
+import { sortBy } from 'lodash';
+
+import { fromOTLPSpan } from './span-parser';
+import { BaseSpan, SpanItem } from './SpanItem';
 
 export type Trace = {
   id: string;
   root: SpanItem;
 };
 
-export function toTrace(spans: RawSpan[]): Trace {
+export function fromSerializedSpans(spans: ISpan[]): Trace {
+  const parsed = spans.map(fromOTLPSpan);
+  return toTrace(parsed);
+}
+
+export function toTrace(spans: BaseSpan[]): Trace {
   ok(spans.length > 0, 'Trying to create a trace without spans');
   const traceId = spans[0]?.traceId;
   spans.forEach((s) =>
@@ -54,10 +38,12 @@ export function getBreadcrumbs(root: SpanItem): SpanItem[] {
   return [...before, root];
 }
 
-export function toTree(spans: RawSpan[]): SpanItem {
+export function toTree(spans: BaseSpan[]): SpanItem {
   const spansById = Object.fromEntries(spans.map((span) => [span.id, span]));
 
-  const missingParent = spans.filter((s) => !spansById[s.parentId]);
+  const missingParent = spans.filter(
+    (s) => !s.parentSpanId || !spansById[s.parentSpanId]
+  );
   ok(
     missingParent.length === 1,
     'Expected to have only one span without existing parent'
@@ -67,9 +53,9 @@ export function toTree(spans: RawSpan[]): SpanItem {
   return makeItem(root, spans);
 }
 
-function addChildren(parent: SpanItem, spans: RawSpan[]) {
+function addChildren(parent: SpanItem, spans: BaseSpan[]) {
   const children = sortBy(
-    spans.filter((s) => s.parentId === parent.id),
+    spans.filter((s) => s.parentSpanId === parent.id),
     'timestamp'
   );
 
@@ -79,7 +65,7 @@ function addChildren(parent: SpanItem, spans: RawSpan[]) {
   });
 }
 
-function makeItem(parent: RawSpan, spans: RawSpan[]): SpanItem {
+function makeItem(parent: BaseSpan, spans: BaseSpan[]): SpanItem {
   const item = new SpanItem(parent);
   addChildren(item, spans);
   return item;

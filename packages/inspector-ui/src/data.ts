@@ -1,6 +1,4 @@
-import { RawSpan } from './lib/model/tree-model';
-
-export const data: RawSpan[] = [
+export const data = [
   {
     traceId: '5573d32c5206c048ce7745921bdf750f',
     parentId: '919a4c8832b7bd71',
