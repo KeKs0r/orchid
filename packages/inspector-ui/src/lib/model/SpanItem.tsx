@@ -60,8 +60,6 @@ export class SpanItem implements BaseSpan {
     this.traceId = span.traceId;
 
     this.duration = span.duration;
-    this.resource = span.resource;
-    this.spanContext = span.spanContext;
     this.startTime = span.startTime;
     this.endTime = span.endTime;
 
