@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "ui": "nx seve inspector",
+    "ui": "nx serve inspector",
     "test": "yarn vitest . --run",
     "test:watch": "yarn vitest .",
     "build": "nx run-many --target=build",

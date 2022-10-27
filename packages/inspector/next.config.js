@@ -1,6 +1,8 @@
 //@ts-check
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const { join } = require('path');
+
 const { withNx } = require('@nrwl/next/plugins/with-nx');
 
 /**
@@ -8,10 +10,20 @@ const { withNx } = require('@nrwl/next/plugins/with-nx');
  **/
 const nextConfig = {
   swcMinify: true,
-
   reactStrictMode: true,
+
+  typescript: {
+    tsconfigPath: join(__dirname, 'tsconfig.json'),
+  },
   experimental: {
     appDir: true,
+    // serverComponentsExternalPackages: [
+    //   '@orchid/inspector-ui',
+    //   '@orchid/inspector',
+    // ],
+    forceSwcTransforms: true,
+
+    transpilePackages: ['@orchid/inspector-ui'],
     fontLoaders: [
       { loader: '@next/font/google', options: { subsets: ['latin'] } },
     ],
