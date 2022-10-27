@@ -66,11 +66,11 @@ export function getTimeline(span: SpanItem) {
 function getStartEnd(span: SpanItem): [StartItem, EndItem] {
   const start: StartItem = {
     type: 'start',
-    timestamp: span.timestamp,
+    timestamp: span.startTime,
   };
   const end: EndItem = {
     type: 'end',
-    timestamp: span.timestamp + span.duration,
+    timestamp: span.endTime,
   };
   return [start, end];
 }
@@ -79,7 +79,7 @@ function getChildren(span: SpanItem): ChildItem[] {
   return span.children.map((child) => ({
     type: 'child',
     name: child.name,
-    timestamp: child.timestamp,
+    timestamp: child.startTime,
     duration: child.duration,
   }));
 }
@@ -87,14 +87,14 @@ function getChildren(span: SpanItem): ChildItem[] {
 function getEvents(span: SpanItem): EventItem[] {
   return span.events
     .filter((event) => event.name !== 'exception')
-    .map(
-      (event): EventItem => ({
+    .map((event): EventItem => {
+      return {
         type: 'event',
         name: event.name,
         timestamp: new Date(hrTimeToTimeStamp(event.time)).getTime(),
         attributes: event.attributes,
-      })
-    );
+      };
+    });
 }
 
 const HrTimeSchema = z

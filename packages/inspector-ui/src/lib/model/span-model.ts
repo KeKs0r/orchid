@@ -1,4 +1,5 @@
 import { SpanStatusCode } from '@opentelemetry/api';
+
 import { SpanItem } from './SpanItem';
 
 export type UISpanStatus = 'error' | 'warn' | 'success';

@@ -1,12 +1,14 @@
+import type { ISpan } from '@opentelemetry/otlp-transformer';
+
+import { fromSerializedSpans } from '../model/tree-model';
+
 import { TraceContextProvider } from './TraceContext';
 import { TraceLayout } from './TraceLayout';
-import { data } from '../../data';
 import { SpanTreeProps, SpanTree } from './SpanTree';
-import { toTrace } from '../model/tree-model';
 import { SpanDetails } from './SpanDetails/SpanDetails';
 
-export function TracePage() {
-  const trace = toTrace(data);
+export function TracePage({ spans }: { spans: ISpan[] }) {
+  const trace = fromSerializedSpans(spans);
   return (
     <TraceContextProvider trace={trace}>
       <TraceLayout aside={<AsideBody root={trace.root} />}>

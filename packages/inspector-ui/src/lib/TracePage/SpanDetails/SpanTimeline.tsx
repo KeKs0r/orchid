@@ -15,6 +15,7 @@ import {
   FireIcon,
 } from '@heroicons/react/24/outline';
 import { Paper } from '@mui/material';
+import React from 'react';
 
 import { SpanItem } from '../../model/SpanItem';
 import {
@@ -22,7 +23,6 @@ import {
   getTimeline,
 } from '../../model/timeline-model';
 import { renderEventTime } from '../../util/date-formatter';
-import React from 'react';
 
 export function SpanTimeline({
   span,

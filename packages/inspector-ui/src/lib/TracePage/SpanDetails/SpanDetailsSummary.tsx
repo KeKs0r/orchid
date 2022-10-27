@@ -5,6 +5,7 @@ import {
   FireIcon,
   ClockIcon,
 } from '@heroicons/react/24/outline';
+
 import { SpanItem } from '../../model/SpanItem';
 import { getStatus, UISpanStatus } from '../../model/span-model';
 import { renderDate, renderDuration } from '../../util/date-formatter';
@@ -26,7 +27,7 @@ export function SpanDetailsSummary({ span }: { span: SpanItem }) {
         subheader={span.status.message}
       ></CardHeader>
       <CardHeader
-        title={renderDate(span.timestamp)}
+        title={renderDate(span.startTime)}
         subheader={renderDuration(span.duration)}
         avatar={
           <Avatar className="bg-transparent">

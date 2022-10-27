@@ -1,11 +1,12 @@
+import { mergeConfig } from 'vite';
 import { defineConfig } from 'vitest/config';
-import tsConfigPaths from 'vite-tsconfig-paths';
+import viteConfig from './vite.config';
 
-export default defineConfig({
-  plugins: [
-    tsConfigPaths({ root: __dirname, projects: ['tsconfig.base.json'] }),
-  ],
-  test: {
-    globals: true,
-  },
-});
+export default mergeConfig(
+  viteConfig,
+  defineConfig({
+    test: {
+      globals: true,
+    },
+  })
+);

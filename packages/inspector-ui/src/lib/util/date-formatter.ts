@@ -11,7 +11,6 @@ export const dateFormatter = new Intl.DateTimeFormat('en-US', {
 export function renderDate(date: string | number) {
   const asDate =
     typeof date === 'number' ? new Date(date / 1000) : parseISO(date);
-  console.log(asDate);
   return dateFormatter.format(asDate);
 }
 
